@@ -1,0 +1,28 @@
+{
+    "applications": {
+        "default": {
+            "abstract": true,
+            "options": {
+                "documentRoot": "/var/www/{projectName}/{context}/"
+            },
+            "nodes": [
+                {
+                    "name": "Front-End Server 2",
+                    "hostname": "www2.sma.de",
+                    "username": "user2",
+                    "context": "Development"
+                },
+                {
+                    "name": "Front-End Server 1",
+                    "hostname": "www.sma.de",
+                    "username": "user1",
+                    "context": "Development"
+                }
+            ]
+        },
+        "deploy": {
+            "superTypes": ["default"],
+            "type": "TYPO3\\CMS\\Deploy"
+        }
+    }
+}

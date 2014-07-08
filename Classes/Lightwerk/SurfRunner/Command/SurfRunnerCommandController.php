@@ -6,7 +6,7 @@ namespace Lightwerk\SurfRunner\Command;
  *                                                                        *
  *                                                                        */
 
-use Lightwerk\SurfCaptain\Domain\Repository\DeploymentRepository;
+use Lightwerk\SurfRunner\Service\DeploymentService;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
@@ -16,18 +16,20 @@ class SurfRunnerCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
 	 * @FLOW\Inject
-	 * @var DeploymentRepository
+	 * @var DeploymentService
 	 */
-	protected $deploymentRepository;
+	protected $deploymentService;
 
 	/**
-	 * Deploy all waiting deployments
+	 * Deploy one from waiting queue
 	 *
 	 * @return void
 	 */
-	public function deployCommand() {
-
-		$this->outputLine('You called the example command and passed "%s" as the first argument.');
+	public function deployWaitingFromQueueCommand() {
+		$deployment = $this->deploymentService->deployWaitingFromQueue();
+		$this->response->setExitCode(
+			$deployment->getStatus()
+		);
 	}
 
 }
