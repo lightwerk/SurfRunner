@@ -23,6 +23,10 @@
             "role": "Developer"
         }
     ],
+    "support": {
+        "issues": "https://bitbucket.org/lightwerk/surfrunner/issues",
+        "source": "https://bitbucket.org/lightwerk/surfrunner/src"
+    },
     "require": {
         "typo3/surf": "*",
         "lightwerk/surfclasses": "*"
