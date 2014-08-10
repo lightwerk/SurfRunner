@@ -6,7 +6,7 @@ namespace Lightwerk\SurfRunner\Service;
  *                                                                        *
  *                                                                        */
 
-use Lightwerk\SurfClasses\Domain\Repository\DeploymentRepository;
+use Lightwerk\SurfCaptain\Domain\Repository\DeploymentRepository;
 use Lightwerk\SurfRunner\Factory\DeploymentFactory;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
@@ -39,7 +39,7 @@ class DeploymentService {
 	 * @return Deployment
 	 */
 	public function deployWaitingFromQueue() {
-		/** @var \Lightwerk\SurfClasses\Domain\Model\Deployment $deploymentRecord */
+		/** @var \Lightwerk\SurfCaptain\Domain\Model\Deployment $deploymentRecord */
 		$deploymentRecord = $this->deploymentRepository->findOneByStatus('waiting');
 		$deploymentRecord->setStatus('running');
 		$this->deploymentRepository->update($deploymentRecord);

@@ -29,7 +29,7 @@
     },
     "require": {
         "typo3/surf": "*",
-        "lightwerk/surfclasses": "*"
+        "lightwerk/surfcaptain": "*"
     },
     "autoload": {
         "psr-0": {

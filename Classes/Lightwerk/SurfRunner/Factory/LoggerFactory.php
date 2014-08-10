@@ -6,7 +6,7 @@ namespace Lightwerk\SurfRunner\Factory;
  *                                                                        *
  *                                                                        */
 
-use Lightwerk\SurfClasses\Domain\Model\Deployment;
+use Lightwerk\SurfCaptain\Domain\Model\Deployment;
 use Lightwerk\SurfRunner\Log\Backend\DatabaseBackend;
 use TYPO3\Flow\Log\Backend\FileBackend;
 use TYPO3\Surf\Log\Backend\AnsiConsoleBackend;

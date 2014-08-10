@@ -6,7 +6,7 @@ namespace Lightwerk\SurfRunner\Factory;
  *                                                                        *
  *                                                                        */
 
-use Lightwerk\SurfClasses\Domain\Repository\DeploymentRepository;
+use Lightwerk\SurfCaptain\Domain\Repository\DeploymentRepository;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 use TYPO3\Surf\Domain\Model\Deployment;
@@ -43,7 +43,7 @@ class DeploymentFactory {
 	/**
 	 * @return Deployment
 	 */
-	public function getDeploymentByDeploymentRecord(\Lightwerk\SurfClasses\Domain\Model\Deployment $deploymentRecord) {
+	public function getDeploymentByDeploymentRecord(\Lightwerk\SurfCaptain\Domain\Model\Deployment $deploymentRecord) {
 		$deploymentName = $this->persistenceManager->getIdentifierByObject($deploymentRecord);
 
 		$deployment = new Deployment($deploymentName);

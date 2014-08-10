@@ -6,9 +6,9 @@ namespace Lightwerk\SurfRunner\Log\Backend;
  *                                                                        *
  *                                                                        */
 
-use Lightwerk\SurfClasses\Domain\Model\Deployment;
-use Lightwerk\SurfClasses\Domain\Model\Log;
-use Lightwerk\SurfClasses\Domain\Repository\LogRepository;
+use Lightwerk\SurfCaptain\Domain\Model\Deployment;
+use Lightwerk\SurfCaptain\Domain\Model\Log;
+use Lightwerk\SurfCaptain\Domain\Repository\LogRepository;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 
