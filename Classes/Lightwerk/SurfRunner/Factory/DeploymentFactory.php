@@ -17,45 +17,42 @@ use TYPO3\Surf\Domain\Model\Deployment;
 class DeploymentFactory {
 
 	/**
-	 * @FLOW\Inject
+	 * @Flow\Inject
 	 * @var DeploymentRepository
 	 */
 	protected $deploymentRepository;
 
 	/**
-	 * @FLOW\Inject
+	 * @Flow\Inject
 	 * @var PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 
 	/**
-	 * @FLOW\Inject
+	 * @Flow\Inject
 	 * @var ApplicationFactory
 	 */
 	protected $applicationFactory;
 
 	/**
-	 * @FLOW\Inject
-	 * @var LoggerFactory
-	 */
-	protected $loggerFactory;
-
-	/**
+	 * @param \Lightwerk\SurfCaptain\Domain\Model\Deployment $surfCaptainDeployment
+	 * @param \TYPO3\Flow\Log\LoggerInterface $logger
 	 * @return Deployment
+	 * @throws Exception
 	 */
-	public function getDeploymentByDeploymentRecord(\Lightwerk\SurfCaptain\Domain\Model\Deployment $deploymentRecord) {
-		$deploymentName = $this->persistenceManager->getIdentifierByObject($deploymentRecord);
+	public function getDeploymentByDeploymentRecord(\Lightwerk\SurfCaptain\Domain\Model\Deployment $surfCaptainDeployment, \TYPO3\Flow\Log\LoggerInterface $logger) {
+		$deployment = new Deployment(
+			$this->persistenceManager->getIdentifierByObject($surfCaptainDeployment)
+		);
+		$deployment->setLogger($logger);
 
-		$deployment = new Deployment($deploymentName);
-
-		$deployment->setLogger($this->loggerFactory->getDefaultLogger($deploymentRecord, $deploymentName));
-
-		$configuration = $deploymentRecord->getConfiguration();
-		if (!empty($configuration['applications']) && is_array($configuration['applications'])) {
-			$applications = $this->applicationFactory->getApplicationsByConfiguration($configuration['applications']);
-			foreach ($applications as $application) {
-				$deployment->addApplication($application);
-			}
+		$configuration = $surfCaptainDeployment->getConfiguration();
+		if (empty($configuration['applications']) || !is_array($configuration['applications'])) {
+			throw new Exception('No applications are given in deployment configuration', 1408397565);
+		}
+		$applications = $this->applicationFactory->getApplicationsByConfiguration($configuration['applications']);
+		foreach ($applications as $application) {
+			$deployment->addApplication($application);
 		}
 
 		return $deployment;

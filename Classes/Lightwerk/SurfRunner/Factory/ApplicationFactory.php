@@ -17,45 +17,43 @@ use TYPO3\Surf\Domain\Model\Node;
 class ApplicationFactory {
 
 	/**
-	 * @param array $configuration
+	 * @param array $configurations
 	 * @return Application[]
 	 */
-	public function getApplicationsByConfiguration(array $applicationsConfiguration) {
+	public function getApplicationsByConfiguration(array $configurations) {
 		$applications = array();
 
-		$solvedApplicationConfigurations = array();
-		foreach ($applicationsConfiguration as $applicationConfiguration) {
-			if (empty($applicationConfiguration['abstract'])) {
-				$solvedApplicationConfigurations[] = $this->getApplicationConfigurations(
-					$applicationConfiguration,
-					$applicationsConfiguration
-				);
-			}
-		}
-
 		$iteration = 0;
-		foreach ($solvedApplicationConfigurations as $solvedApplicationConfiguration) {
+		foreach ($configurations as $configuration) {
 			$iteration++;
-			$applicationClass = '\\Lightwerk\\SurfRunner\\Application\\' . $solvedApplicationConfiguration['type'] . 'Application';
+
+			if (empty($configuration['type'])) {
+				throw new Exception('No type is given in application configuration', 1408396056);
+			}
+			$applicationClass = '\\Lightwerk\\SurfRunner\\Application\\' . $configuration['type'] . 'Application';
 			if (!class_exists($applicationClass)) {
 				break;
 			}
 			// Do not change the Application name!
 			// @see \Lightwerk\SurfRunner\Application\AbstractApplication->getTaskNameForApplication()
 			/** @var AbstractApplication $application */
-			$application = new $applicationClass('#' . $iteration . ' ' . $solvedApplicationConfiguration['type']);
+			$application = new $applicationClass('#' . $iteration . ' ' . $configuration['type']);
 
-			if (!empty($solvedApplicationConfiguration['tasks']) && is_array($solvedApplicationConfiguration['tasks'])) {
-				$application->addTasks($solvedApplicationConfiguration['tasks']);
+			if (!empty($configuration['options']) && is_array($configuration['options'])) {
+				$application->setOptions($configuration['options']);
 			}
-			if (!empty($solvedApplicationConfiguration['taskOptions']) && is_array($solvedApplicationConfiguration['taskOptions'])) {
-				$application->addStagesAndTasks($solvedApplicationConfiguration['taskOptions']);
+			if (!empty($configuration['tasks']) && is_array($configuration['tasks'])) {
+				$application->addTasks($configuration['tasks']);
+			}
+			if (!empty($configuration['taskOptions']) && is_array($configuration['taskOptions'])) {
+				$application->addTaskOptions($configuration['taskOptions']);
 			}
 
-			if (!empty($solvedApplicationConfiguration['nodes']) && is_array($solvedApplicationConfiguration['nodes'])) {
-				foreach ($solvedApplicationConfiguration['nodes'] as $nodeConfiguration) {
-					$application->addNode($this->getNodeByConfiguration($nodeConfiguration));
-				}
+			if (empty($configuration['nodes']) || !is_array($configuration['nodes'])) {
+				throw new Exception('No nodes are given in application configuration', 1408396220);
+			}
+			foreach ($configuration['nodes'] as $nodeConfiguration) {
+				$application->addNode($this->getNodeByConfiguration($nodeConfiguration));
 			}
 
 			$applications[] = $application;
@@ -68,8 +66,17 @@ class ApplicationFactory {
 	 * @return Node
 	 */
 	protected function getNodeByConfiguration(array $configuration) {
+		if (empty($configuration['name'])) {
+			throw new Exception('Name is not given for node', 1408396327);
+		}
+		if (empty($configuration['hostname'])) {
+			throw new Exception('Hostname is not given for node', 1408396400);
+		}
 		$node = new Node($configuration['name']);
 		foreach ($configuration as $key => $value) {
+			if ($key === 'name') {
+				continue;
+			}
 			$method = 'set' . ucfirst($key);
 			if (method_exists($node, $method)) {
 				$node->$method($value);
@@ -78,25 +85,5 @@ class ApplicationFactory {
 			}
 		}
 		return $node;
-	}
-
-	/**
-	 * @param array $configuration
-	 * @param array $fullConfiguration
-	 * @return array
-	 */
-	protected function getApplicationConfigurations(array $configuration, array $fullConfiguration) {
-		if (!empty($configuration['superTypes']) && is_array($configuration['superTypes'])) {
-			foreach ($configuration['superTypes'] as $superType) {
-				if (!empty($fullConfiguration[$superType]) && is_array($fullConfiguration[$superType])) {
-					$tempConfiguration = $this->getApplicationConfigurations($fullConfiguration[$superType], $fullConfiguration);
-					if (!empty($configuration['nodes']) && !empty($configuration['nodes'])) {
-						unset($tempConfiguration['nodes']);
-					}
-					$configuration = array_merge_recursive($configuration, $tempConfiguration);
-				}
-			}
-		}
-		return $configuration;
 	}
 }
