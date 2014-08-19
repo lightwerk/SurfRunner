@@ -14,6 +14,13 @@ class DeployApplication extends AbstractApplication {
 	/**
 	 * @var array
 	 */
+	protected $options = array(
+		'useApplicationWorkspace' => TRUE,
+	);
+
+	/**
+	 * @var array
+	 */
 	protected $tasks = array(
 //		'initialize' => array(),	// Initialize directories etc. (first time deploy)
 		'package' => array(			// Local preparation of and packaging of application assets
@@ -27,11 +34,11 @@ class DeployApplication extends AbstractApplication {
 		'migrate' => array(			// Migrate (Doctrine, custom)
 			'lightwerk.surftasks:typo3:cms:createuploadfolders',
 			'lightwerk.surftasks:typo3:cms:clearcache',
-			'lightwerk.surftasks:typo3:cms:updatedb',
+			'lightwerk.surftasks:typo3:cms:updatedatabase',
 		),
 		'finalize' => array(		// Prepare final release (e.g. warmup)
 			'lightwerk.surftasks:deploymentlog',
-			'lightwerk.surftasks:git:removebranch',
+			'lightwerk.surftasks:git:tagnodedeployment',
 		),
 //		'test' => array(),			// Smoke test
 //		'switch' => array(),		// Do symlink to current release
@@ -51,6 +58,11 @@ class DeployApplication extends AbstractApplication {
 			'options' => array(
 				'nodeName' => 'localhost',
 				'composerCommandPath' => 'composer',
+			),
+		),
+		'lightwerk.surftasks:git:tagnodedeployment' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
 			),
 		),
 	);

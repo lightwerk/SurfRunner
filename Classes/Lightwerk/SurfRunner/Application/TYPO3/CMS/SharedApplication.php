@@ -12,6 +12,13 @@ use TYPO3\Flow\Annotations as Flow;
 class SharedApplication extends AbstractApplication {
 
 	/**
+	 * @var array
+	 */
+	protected $options = array(
+		'useApplicationWorkspace' => TRUE,
+	);
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $name

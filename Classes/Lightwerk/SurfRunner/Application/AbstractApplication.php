@@ -23,6 +23,16 @@ abstract class AbstractApplication extends \TYPO3\Surf\Domain\Model\Application 
 	protected $tasks = array();
 
 	/**
+	 * @param array $options
+	 * @return void
+	 */
+	public function addOptions(array $options) {
+		foreach ($options as $key => $value) {
+			$this->setOption($key, $value);
+		}
+	}
+
+	/**
 	 * @param Workflow $workflow
 	 * @param Deployment $deployment
 	 * @return void

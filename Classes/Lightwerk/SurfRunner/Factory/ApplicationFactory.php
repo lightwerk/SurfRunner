@@ -40,7 +40,7 @@ class ApplicationFactory {
 			$application = new $applicationClass('#' . $iteration . ' ' . $configuration['type']);
 
 			if (!empty($configuration['options']) && is_array($configuration['options'])) {
-				$application->setOptions($configuration['options']);
+				$application->addOptions($configuration['options']);
 			}
 			if (!empty($configuration['tasks']) && is_array($configuration['tasks'])) {
 				$application->addTasks($configuration['tasks']);
