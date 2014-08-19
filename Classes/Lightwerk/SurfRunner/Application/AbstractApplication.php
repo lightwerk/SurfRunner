@@ -39,7 +39,7 @@ abstract class AbstractApplication extends \TYPO3\Surf\Domain\Model\Application 
 				if ($previousTask === NULL) {
 					$workflow->addTask($task, $stage, $this);
 				} else {
-					$workflow->afterTask($task, $previousTask, $this);
+					$workflow->afterTask($previousTask, $task, $this);
 				}
 				$previousTask = $task;
 			}

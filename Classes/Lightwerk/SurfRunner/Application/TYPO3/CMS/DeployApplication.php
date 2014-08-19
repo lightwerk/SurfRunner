@@ -18,7 +18,7 @@ class DeployApplication extends AbstractApplication {
 //		'initialize' => array(),	// Initialize directories etc. (first time deploy)
 		'package' => array(			// Local preparation of and packaging of application assets
 			'typo3.surf:package:git',
-			'lightwerk.surftasks:package:composerinstall',
+			'typo3.surf:composer:install',
 		),
 		'transfer' => array(		// Transfer of application assets to the node
 			'typo3.surf:transfer:rsync',
@@ -45,6 +45,12 @@ class DeployApplication extends AbstractApplication {
 		'typo3.surf:package:git' => array(
 			'options' => array(
 				'fetchAllTags' => TRUE,
+			),
+		),
+		'typo3.surf:composer:install' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
+				'composerCommandPath' => 'composer',
 			),
 		),
 	);
