@@ -22,22 +22,28 @@ use Lightwerk\SurfCaptain\Domain\Model\Deployment as SurfCaptainDeployment;
 class DeploymentService {
 
 	/**
-	 * @FLOW\Inject
+	 * @Flow\Inject
 	 * @var DeploymentRepository
 	 */
 	protected $deploymentRepository;
 
 	/**
-	 * @FLOW\Inject
+	 * @Flow\Inject
 	 * @var DeploymentFactory
 	 */
 	protected $deploymentFactory;
 
 	/**
-	 * @FLOW\Inject
+	 * @Flow\Inject
 	 * @var PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
+
+	/**
+	 * @Flow\Inject()
+	 * @var \TYPO3\Flow\SignalSlot\Dispatcher
+	 */
+	protected $signalDispatcher;
 
 	/**
 	 * @param LoggerInterface $logger
@@ -50,7 +56,10 @@ class DeploymentService {
 		if ($surfCaptainDeployment instanceof SurfCaptainDeployment === false) {
 			throw new NoAvailableDeploymentException();
 		}
-		$this->setStatusBeforeDeployment($surfCaptainDeployment, $dryRun);
+
+		if (!$dryRun) {
+			$this->setStatusBeforeDeployment($surfCaptainDeployment);
+		}
 
 		$logger->addBackend(
 			new DatabaseBackend(
@@ -61,46 +70,64 @@ class DeploymentService {
 		$deployment = $this->deploymentFactory->getDeploymentByDeploymentRecord($surfCaptainDeployment, $logger);
 		$deployment->initialize();
 		if (!$dryRun) {
+			$this->emitDeploymentStarted($deployment, $surfCaptainDeployment);
 			$deployment->deploy();
+			$this->setStatusAfterDeployment($surfCaptainDeployment, $deployment->getStatus());
+			$this->emitDeploymentFinished($deployment, $surfCaptainDeployment);
 		} else {
 			$deployment->simulate();
 		}
-
-		$this->setStatusAfterDeployment($surfCaptainDeployment, $deployment->getStatus(), $dryRun);
 
 		return $deployment;
 	}
 
 	/**
+	 * Signalizes that a deployment started
+	 *
+	 * @Flow\Signal
+	 * @param Deployment $deployment
 	 * @param SurfCaptainDeployment $surfCaptainDeployment
-	 * @param bool $dryRun
+	 * @return void
+	 * @throws \TYPO3\Flow\SignalSlot\Exception\InvalidSlotException
+	 */
+	protected function emitDeploymentStarted(Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {}
+
+	/**
+	 * Signalizes that a deployment finished
+	 *
+	 * @Flow\Signal
+	 * @param Deployment $deployment
+	 * @param SurfCaptainDeployment $surfCaptainDeployment
+	 * @return void
+	 * @throws \TYPO3\Flow\SignalSlot\Exception\InvalidSlotException
+	 */
+	protected function emitDeploymentFinished(Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {}
+
+	/**
+	 * @param SurfCaptainDeployment $surfCaptainDeployment
 	 * @return void
 	 * @throws \TYPO3\Flow\Persistence\Exception\IllegalObjectTypeException
 	 */
-	protected function writeSurfCaptainDeployment(SurfCaptainDeployment $surfCaptainDeployment, $dryRun) {
-		if (!$dryRun) {
-			$this->deploymentRepository->update($surfCaptainDeployment);
-			$this->persistenceManager->persistAll();
-		}
+	protected function writeSurfCaptainDeployment(SurfCaptainDeployment $surfCaptainDeployment) {
+		$this->deploymentRepository->update($surfCaptainDeployment);
+		$this->persistenceManager->persistAll();
 	}
 
 	/**
 	 * @param SurfCaptainDeployment $surfCaptainDeployment
-	 * @param boolean $dryRun
 	 * @return void
 	 */
-	protected function setStatusBeforeDeployment(SurfCaptainDeployment $surfCaptainDeployment, $dryRun) {
+	protected function setStatusBeforeDeployment(SurfCaptainDeployment $surfCaptainDeployment) {
 		$surfCaptainDeployment->setStatus(SurfCaptainDeployment::STATUS_RUNNING);
-		$this->writeSurfCaptainDeployment($surfCaptainDeployment, $dryRun);
+		$this->writeSurfCaptainDeployment($surfCaptainDeployment);
 	}
 
 	/**
 	 * @param SurfCaptainDeployment $surfCaptainDeployment
 	 * @param integer $status
-	 * @param boolean $dryRun
 	 * @return void
 	 */
-	protected function setStatusAfterDeployment(SurfCaptainDeployment $surfCaptainDeployment, $status, $dryRun) {
+	protected function setStatusAfterDeployment(SurfCaptainDeployment $surfCaptainDeployment, $status) {
 		switch ($status) {
 			case Deployment::STATUS_SUCCESS:
 				$status = SurfCaptainDeployment::STATUS_SUCCESS;
@@ -114,6 +141,6 @@ class DeploymentService {
 				break;
 		}
 		$surfCaptainDeployment->setStatus($status);
-		$this->writeSurfCaptainDeployment($surfCaptainDeployment, $dryRun);
+		$this->writeSurfCaptainDeployment($surfCaptainDeployment);
 	}
 }

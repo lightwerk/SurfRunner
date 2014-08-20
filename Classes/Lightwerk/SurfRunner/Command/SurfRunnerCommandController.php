@@ -34,6 +34,7 @@ class SurfRunnerCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$deployment = $this->deploymentService->deployWaitingFromQueue($logger, $dryRun);
 			$status = $deployment->getStatus();
 		} catch (\Lightwerk\SurfRunner\Exception\NoAvailableDeploymentException $e) {
+			$logger->log('No waiting deployments', LOG_INFO);
 			$status = 0;
 		} catch (\Lightwerk\SurfRunner\Factory\Exception $e) {
 			$logger->log('Configuration error: ' . $e->getMessage() . ' (Code: ' . $e->getCode() . ')', LOG_ERR);

@@ -1,0 +1,14 @@
+Lightwerk:
+  SurfRunner:
+    notification:
+      hipChat:
+#        privateToken: 'Please define this value in root/Configuration/Settings.yaml'
+#        frontendUrl: 'http://.../#/deployment/{{identifier}}'
+#        deploymentStarted:
+#          room: 1234
+#          user: UserName
+#          enabled: 0
+#        deploymentFinished:
+#          room: 1234
+#          user: UserName
+#          enabled: 0
