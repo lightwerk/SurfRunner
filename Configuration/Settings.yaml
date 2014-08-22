@@ -3,12 +3,14 @@ Lightwerk:
     notification:
       hipChat:
 #        privateToken: 'Please define this value in root/Configuration/Settings.yaml'
-#        frontendUrl: 'http://.../#/deployment/{{identifier}}'
-#        deploymentStarted:
+#        frontendUrl: 'http://.../#/deployment/'
+        deploymentStarted:
+          enabled: 0
+          templatePathAndFilename: Packages/Application/Lightwerk.SurfRunner/Resources/Private/Templates/Notification/HipChat/DeploymentStarted.txt
 #          room: 1234
 #          user: UserName
-#          enabled: 0
-#        deploymentFinished:
+        deploymentFinished:
+          enabled: 0
+          templatePathAndFilename: Packages/Application/Lightwerk.SurfRunner/Resources/Private/Templates/Notification/HipChat/DeploymentFinished.txt
 #          room: 1234
 #          user: UserName
-#          enabled: 0

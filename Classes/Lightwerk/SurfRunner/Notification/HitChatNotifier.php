@@ -8,7 +8,6 @@ namespace Lightwerk\SurfRunner\Notification;
 
 use Lightwerk\SurfRunner\Notification\Driver\HipChatDriver;
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\I18n\Translator;
 use TYPO3\Surf\Domain\Model\Deployment;
 use Lightwerk\SurfCaptain\Domain\Model\Deployment as SurfCaptainDeployment;
 
@@ -28,12 +27,6 @@ class HitChatNotifier {
 	protected $settings;
 
 	/**
-	 * @Flow\Inject
-	 * @var Translator
-	 */
-	protected $translator;
-
-	/**
 	 * @param array $settings
 	 * @return void
 	 */
@@ -41,6 +34,9 @@ class HitChatNotifier {
 		$this->settings = $settings['notification']['hipChat'];
 	}
 
+	/**
+	 * @return void
+	 */
 	public function initializeObject() {
 		$this->hipChatDriver->setSettings($this->settings);
 	}
@@ -51,21 +47,21 @@ class HitChatNotifier {
 	 * @return void
 	 */
 	public function deploymentStarted(Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {
-		if (!empty($this->settings['deploymentStarted']['enabled'])) {
-			$arguments = array(
-				'name' => $deployment->getName(),
-				'link' => str_replace('{{identifier}}', $deployment->getName(), $this->settings['frontendUrl']),
-				'repositoryUrl' => $surfCaptainDeployment->getRepositoryUrl(),
-				'referenceName' => $surfCaptainDeployment->getReferenceName(),
-				'type' => $surfCaptainDeployment->getType(),
-				'status' => $surfCaptainDeployment->getStatus(),
-			);
-
-			$this->hipChatDriver->sendMessage(
-				$this->settings['deploymentStarted']['room'],
-				$this->getTranslation('notification.deploymentStarted', $arguments)
-			);
+		if (empty($this->settings['deploymentStarted']['enabled'])) {
+			return;
 		}
+
+		$view = new \TYPO3\Fluid\View\StandaloneView();
+		$view->setTemplatePathAndFilename($this->settings['deploymentStarted']['templatePathAndFilename']);
+		$view->assign('deployment', $deployment)
+			 ->assign('surfCaptainDeployment', $surfCaptainDeployment)
+			 ->assign('settings', array_merge($this->settings, $this->settings['deploymentStarted']));
+
+		$this->hipChatDriver->sendMessage(
+			$this->settings['deploymentStarted']['room'],
+			$view->render(),
+			HipChatDriver::MESSAGE_FORMAT_HTML
+		);
 	}
 
 	/**
@@ -74,39 +70,30 @@ class HitChatNotifier {
 	 * @return void
 	 */
 	public function deploymentFinished(Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {
-		if (!empty($this->settings['deploymentFinished']['enabled'])) {
-			$arguments = array(
-				'name' => $deployment->getName(),
-				'link' => str_replace('{{identifier}}', $deployment->getName(), $this->settings['frontendUrl']),
-				'repositoryUrl' => $surfCaptainDeployment->getRepositoryUrl(),
-				'referenceName' => $surfCaptainDeployment->getReferenceName(),
-				'type' => $surfCaptainDeployment->getType(),
-				'status' => $surfCaptainDeployment->getStatus(),
-			);
-
-			if ($surfCaptainDeployment->getStatus() !== SurfCaptainDeployment::STATUS_FAILED) {
-				$color = HipChatDriver::MESSAGE_COLOR_GREEN;
-			} else {
-				$color = HipChatDriver::MESSAGE_COLOR_RED;
-			}
-
-			$this->hipChatDriver->sendMessage(
-				$this->settings['deploymentFinished']['room'],
-				$this->getTranslation('notification.deploymentFinished', $arguments),
-				HipChatDriver::MESSAGE_FORMAT_TEXT,
-				TRUE,
-				$color
-			);
+		if (empty($this->settings['deploymentFinished']['enabled'])) {
+			return;
 		}
-	}
 
-	/**
-	 * @param string $id
-	 * @param array $arguments
-	 * @param integer $quantity
-	 * @return string
-	 */
-	protected function getTranslation($id, array $arguments = array(), $quantity = NULL) {
-		return $this->translator->translateById($id, $arguments, $quantity, NULL, 'Main', 'Lightwerk.SurfRunner');
+		switch ($surfCaptainDeployment->getStatus()) {
+			case SurfCaptainDeployment::STATUS_FAILED:
+				$color = HipChatDriver::MESSAGE_COLOR_RED;
+				break;
+			default:
+				$color = HipChatDriver::MESSAGE_COLOR_GREEN;
+		}
+
+		$view = new \TYPO3\Fluid\View\StandaloneView();
+		$view->setTemplatePathAndFilename($this->settings['deploymentFinished']['templatePathAndFilename']);
+		$view->assign('deployment', $deployment)
+			 ->assign('surfCaptainDeployment', $surfCaptainDeployment)
+			 ->assign('settings', array_merge($this->settings, $this->settings['deploymentFinished']));
+
+		$this->hipChatDriver->sendMessage(
+			$this->settings['deploymentFinished']['room'],
+			$view->render(),
+			HipChatDriver::MESSAGE_FORMAT_HTML,
+			TRUE,
+			$color
+		);
 	}
 }
