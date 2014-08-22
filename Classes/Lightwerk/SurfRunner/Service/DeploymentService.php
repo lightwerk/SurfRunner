@@ -77,6 +77,7 @@ class DeploymentService {
 		} else {
 			$deployment->simulate();
 		}
+		$this->emitDeploymentFinished($deployment, $surfCaptainDeployment);
 
 		return $deployment;
 	}

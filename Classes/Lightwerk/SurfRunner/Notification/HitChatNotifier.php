@@ -35,33 +35,25 @@ class HitChatNotifier {
 	}
 
 	/**
-	 * @return void
-	 */
-	public function initializeObject() {
-		$this->hipChatDriver->setSettings($this->settings);
-	}
-
-	/**
 	 * @param Deployment $deployment
 	 * @param SurfCaptainDeployment $surfCaptainDeployment
 	 * @return void
 	 */
 	public function deploymentStarted(Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {
-		if (empty($this->settings['deploymentStarted']['enabled'])) {
+		$settings = $this->getSettingsForFunction('deploymentStarted', $surfCaptainDeployment);
+
+		if (empty($settings['enabled'])) {
 			return;
 		}
 
 		$view = new \TYPO3\Fluid\View\StandaloneView();
-		$view->setTemplatePathAndFilename($this->settings['deploymentStarted']['templatePathAndFilename']);
+		$view->setTemplatePathAndFilename($settings['templatePathAndFilename']);
 		$view->assign('deployment', $deployment)
 			 ->assign('surfCaptainDeployment', $surfCaptainDeployment)
-			 ->assign('settings', array_merge($this->settings, $this->settings['deploymentStarted']));
+			 ->assign('settings', $settings);
 
-		$this->hipChatDriver->sendMessage(
-			$this->settings['deploymentStarted']['room'],
-			$view->render(),
-			HipChatDriver::MESSAGE_FORMAT_HTML
-		);
+		$this->hipChatDriver->setSettings($settings)
+							->sendMessage($settings['room'], $view->render(), HipChatDriver::MESSAGE_FORMAT_HTML);
 	}
 
 	/**
@@ -70,7 +62,9 @@ class HitChatNotifier {
 	 * @return void
 	 */
 	public function deploymentFinished(Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {
-		if (empty($this->settings['deploymentFinished']['enabled'])) {
+		$settings = $this->getSettingsForFunction('deploymentFinished', $surfCaptainDeployment);
+
+		if (empty($settings['enabled'])) {
 			return;
 		}
 
@@ -83,17 +77,28 @@ class HitChatNotifier {
 		}
 
 		$view = new \TYPO3\Fluid\View\StandaloneView();
-		$view->setTemplatePathAndFilename($this->settings['deploymentFinished']['templatePathAndFilename']);
+		$view->setTemplatePathAndFilename($settings['templatePathAndFilename']);
 		$view->assign('deployment', $deployment)
 			 ->assign('surfCaptainDeployment', $surfCaptainDeployment)
-			 ->assign('settings', array_merge($this->settings, $this->settings['deploymentFinished']));
+			 ->assign('settings', $settings);
 
-		$this->hipChatDriver->sendMessage(
-			$this->settings['deploymentFinished']['room'],
-			$view->render(),
-			HipChatDriver::MESSAGE_FORMAT_HTML,
-			TRUE,
-			$color
-		);
+		$this->hipChatDriver->setSettings($settings)
+							->sendMessage($settings['room'], $view->render(), HipChatDriver::MESSAGE_FORMAT_HTML, TRUE, $color);
+	}
+
+	/**
+	 * @param string $key
+	 * @param SurfCaptainDeployment $surfCaptainDeployment
+	 * @return array
+	 */
+	protected function getSettingsForFunction($key, SurfCaptainDeployment $surfCaptainDeployment) {
+		$settings = array_merge($this->settings, $this->settings[$key]);
+
+		$repositoryUrl = $surfCaptainDeployment->getRepositoryUrl();
+		if (!empty($repositoryUrl) && !empty($settings[$repositoryUrl][$key])) {
+			$settings = array_merge($settings, $settings[$repositoryUrl][$key]);
+		}
+
+		return $settings;
 	}
 }

@@ -52,10 +52,11 @@ class HipChatDriver {
 
 	/**
 	 * @param array $settings
-	 * @return void
+	 * @return HipChatDriver
 	 */
 	public function setSettings(array $settings) {
 		$this->settings = $settings;
+		return $this;
 	}
 
 	/**
