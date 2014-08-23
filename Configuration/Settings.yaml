@@ -9,11 +9,11 @@ Lightwerk:
 
         deploymentStarted:
           enabled: 0
-          templatePathAndFilename: Packages/Application/Lightwerk.SurfRunner/Resources/Private/Templates/Notification/HipChat/DeploymentStarted.txt
+          templatePathAndFilename: Packages/Application/Lightwerk.SurfRunner/Resources/Private/Templates/Notification/HipChat/DeploymentStarted.html
 
         deploymentFinished:
           enabled: 0
-          templatePathAndFilename: Packages/Application/Lightwerk.SurfRunner/Resources/Private/Templates/Notification/HipChat/DeploymentFinished.txt
+          templatePathAndFilename: Packages/Application/Lightwerk.SurfRunner/Resources/Private/Templates/Notification/HipChat/DeploymentFinished.html
 
 #        'git@git.domain.de:namepsace/project.git':
 #          deploymentStarted:
