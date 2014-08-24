@@ -25,8 +25,8 @@ class DeployApplication extends AbstractApplication {
 		),
 //		'update' => array(),		// Update the application assets on the node
 		'migrate' => array(			// Migrate (Doctrine, custom)
-			'lightwerk.surftasks:typo3:cms:createuploadfolders',
 			'lightwerk.surftasks:typo3:cms:clearcache',
+			'lightwerk.surftasks:typo3:cms:createuploadfolders',
 			'lightwerk.surftasks:typo3:cms:updatedatabase',
 		),
 		'finalize' => array(		// Prepare final release (e.g. warmup)
