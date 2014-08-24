@@ -1,5 +1,5 @@
 <?php
-namespace Lightwerk\SurfRunner\Application;
+namespace Lightwerk\SurfRunner\Domain\Model\Application;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "Lightwerk.SurfRunner".  *

@@ -6,7 +6,7 @@ namespace Lightwerk\SurfRunner\Factory;
  *                                                                        *
  *                                                                        */
 
-use Lightwerk\SurfRunner\Application\AbstractApplication;
+use Lightwerk\SurfRunner\Domain\Model\Application\AbstractApplication;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Surf\Domain\Model\Application;
 use TYPO3\Surf\Domain\Model\Node;
@@ -30,7 +30,7 @@ class ApplicationFactory {
 			if (empty($configuration['type'])) {
 				throw new Exception('No type is given in application configuration', 1408396056);
 			}
-			$applicationClass = '\\Lightwerk\\SurfRunner\\Application\\' . $configuration['type'] . 'Application';
+			$applicationClass = '\\Lightwerk\\SurfRunner\\Domain\\Model\\Application\\' . $configuration['type'] . 'Application';
 			if (!class_exists($applicationClass)) {
 				break;
 			}

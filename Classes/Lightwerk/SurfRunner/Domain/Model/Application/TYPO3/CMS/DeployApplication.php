@@ -1,12 +1,12 @@
 <?php
-namespace Lightwerk\SurfRunner\Application\TYPO3\CMS;
+namespace Lightwerk\SurfRunner\Domain\Model\Application\TYPO3\CMS;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "Lightwerk.SurfRunner".  *
  *                                                                        *
  *                                                                        */
 
-use Lightwerk\SurfRunner\Application\AbstractApplication;
+use Lightwerk\SurfRunner\Domain\Model\Application\AbstractApplication;
 use TYPO3\Flow\Annotations as Flow;
 
 class DeployApplication extends AbstractApplication {
