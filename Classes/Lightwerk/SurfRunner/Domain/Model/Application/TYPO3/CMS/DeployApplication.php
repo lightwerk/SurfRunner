@@ -19,6 +19,7 @@ class DeployApplication extends AbstractApplication {
 		'package' => array(			// Local preparation of and packaging of application assets
 			'typo3.surf:package:git',
 			'typo3.surf:composer:install',
+			'lightwerk.surftasks:git:removedeploybranch',
 		),
 		'transfer' => array(		// Transfer of application assets to the node
 			'lightwerk.surftasks:transfer:rsync',
@@ -54,6 +55,11 @@ class DeployApplication extends AbstractApplication {
 			),
 		),
 		'lightwerk.surftasks:git:tagnodedeployment' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
+			),
+		),
+		'lightwerk.surftasks:git:removedeploybranch' => array(
 			'options' => array(
 				'nodeName' => 'localhost',
 			),
