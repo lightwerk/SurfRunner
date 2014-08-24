@@ -7,10 +7,24 @@ namespace Lightwerk\SurfRunner\Application;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Reflection\ObjectAccess;
 use TYPO3\Surf\Domain\Model\Deployment;
 use TYPO3\Surf\Domain\Model\Workflow;
 
 abstract class AbstractApplication extends \TYPO3\Surf\Domain\Model\Application {
+
+	/**
+	 * @var string
+	 */
+	protected $releasesDirectory = '';
+
+	/**
+	 * @var array
+	 */
+	protected $options = array(
+		'useApplicationWorkspace' => TRUE,
+		'releasesDirectory' => '',
+	);
 
 	/**
 	 * @var array
@@ -28,7 +42,12 @@ abstract class AbstractApplication extends \TYPO3\Surf\Domain\Model\Application 
 	 */
 	public function addOptions(array $options) {
 		foreach ($options as $key => $value) {
-			$this->setOption($key, $value);
+			$setterName = $setterName = ObjectAccess::buildSetterMethodName($key);;
+			if (method_exists($this, $setterName)) {
+				$this->$setterName($value);
+			} else {
+				$this->setOption($key, $value);
+			}
 		}
 	}
 

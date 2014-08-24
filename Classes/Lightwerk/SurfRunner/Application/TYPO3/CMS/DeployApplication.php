@@ -14,13 +14,6 @@ class DeployApplication extends AbstractApplication {
 	/**
 	 * @var array
 	 */
-	protected $options = array(
-		'useApplicationWorkspace' => TRUE,
-	);
-
-	/**
-	 * @var array
-	 */
 	protected $tasks = array(
 //		'initialize' => array(),	// Initialize directories etc. (first time deploy)
 		'package' => array(			// Local preparation of and packaging of application assets
@@ -28,7 +21,7 @@ class DeployApplication extends AbstractApplication {
 			'typo3.surf:composer:install',
 		),
 		'transfer' => array(		// Transfer of application assets to the node
-			'typo3.surf:transfer:rsync',
+			'lightwerk.surftasks:transfer:rsync',
 		),
 //		'update' => array(),		// Update the application assets on the node
 		'migrate' => array(			// Migrate (Doctrine, custom)

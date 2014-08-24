@@ -9,7 +9,7 @@ namespace Lightwerk\SurfRunner\Factory;
 use Lightwerk\SurfCaptain\Domain\Repository\DeploymentRepository;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
-use TYPO3\Surf\Domain\Model\Deployment;
+use Lightwerk\SurfRunner\Domain\Model\Deployment;
 
 /**
  * @Flow\Scope("singleton")
