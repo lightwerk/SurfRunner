@@ -53,7 +53,7 @@ class DeploymentService {
 	public function deployWaitingFromQueue(LoggerInterface $logger, $dryRun) {
 		/** @var SurfCaptainDeployment $surfCaptainDeployment */
 		$surfCaptainDeployment = $this->deploymentRepository->findOneByStatus(SurfCaptainDeployment::STATUS_WAITING);
-		if ($surfCaptainDeployment instanceof SurfCaptainDeployment === false) {
+		if ($surfCaptainDeployment instanceof SurfCaptainDeployment === FALSE) {
 			throw new NoAvailableDeploymentException();
 		}
 
