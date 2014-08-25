@@ -6,5 +6,10 @@ namespace Lightwerk\SurfRunner\Notification;
  *                                                                        *
  *                                                                        */
 
+/**
+ * Exception
+ *
+ * @package Lightwerk\SurfRunner
+ */
 class Exception extends \Lightwerk\SurfRunner\Exception {
 }

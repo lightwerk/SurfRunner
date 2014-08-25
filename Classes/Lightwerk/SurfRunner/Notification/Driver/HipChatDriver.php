@@ -9,7 +9,10 @@ namespace Lightwerk\SurfRunner\Notification\Driver;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
+ * HipChat Driver
+ *
  * @Flow\Scope("singleton")
+ * @package Lightwerk\SurfRunner
  */
 class HipChatDriver {
 
@@ -70,7 +73,6 @@ class HipChatDriver {
 
 	/**
 	 * @param integer $room
-	 * @param string $from
 	 * @param string $message
 	 * @param string $messageFormat
 	 * @param bool $notify
@@ -78,7 +80,8 @@ class HipChatDriver {
 	 * @return void
 	 * @throws Exception
 	 */
-	public function sendMessage($room, $message, $messageFormat = self::MESSAGE_FORMAT_TEXT, $notify = TRUE, $color = self::MESSAGE_COLOR_YELLOW) {
+	public function sendMessage($room, $message, $messageFormat = self::MESSAGE_FORMAT_TEXT, $notify = TRUE,
+								$color = self::MESSAGE_COLOR_YELLOW) {
 		$this->getApiResponse(
 			'room/' . $room . '/notification',
 			'POST',
@@ -94,10 +97,10 @@ class HipChatDriver {
 	/**
 	 * @param string $command
 	 * @param string $method
-	 * @param array $parameters
-	 * @return mixed $data
+	 * @param array $content
+	 * @return string
 	 * @throws Exception
-	 * @throws \TYPO3\Flow\Http\Exception
+	 * @throws \TYPO3\Flow\Http\Client\InfiniteRedirectionException
 	 */
 	protected function getApiResponse($command, $method = 'GET', array $content) {
 		$url = self::URL . trim($command, '/') . '?' . http_build_query(array('auth_token' => $this->settings['authToken']));
@@ -106,7 +109,10 @@ class HipChatDriver {
 
 		$statusCode = $response->getStatusCode();
 		if ($statusCode < 200 || $statusCode >= 400) {
-			throw new Exception('HipChat request was not successful. Response was: ' . $response->getStatus() . '. Content: ' . $response->getContent(), 1408549039);
+			throw new Exception(
+				'HipChat request was not successful. Response was: ' . $response->getStatus() . '. Content: ' . $response->getContent(),
+				1408549039
+			);
 		}
 
 		return $response->getContent();

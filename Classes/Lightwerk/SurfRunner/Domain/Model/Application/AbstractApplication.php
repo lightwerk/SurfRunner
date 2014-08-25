@@ -8,10 +8,16 @@ namespace Lightwerk\SurfRunner\Domain\Model\Application;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Reflection\ObjectAccess;
+use TYPO3\Surf\Domain\Model\Application;
 use TYPO3\Surf\Domain\Model\Deployment;
 use TYPO3\Surf\Domain\Model\Workflow;
 
-abstract class AbstractApplication extends \TYPO3\Surf\Domain\Model\Application {
+/**
+ * Abstract Application
+ *
+ * @package Lightwerk\SurfRunner
+ */
+abstract class AbstractApplication extends Application {
 
 	/**
 	 * @var string
@@ -42,7 +48,7 @@ abstract class AbstractApplication extends \TYPO3\Surf\Domain\Model\Application 
 	 */
 	public function addOptions(array $options) {
 		foreach ($options as $key => $value) {
-			$setterName = $setterName = ObjectAccess::buildSetterMethodName($key);;
+			$setterName = $setterName = ObjectAccess::buildSetterMethodName($key);
 			if (method_exists($this, $setterName)) {
 				$this->$setterName($value);
 			} else {

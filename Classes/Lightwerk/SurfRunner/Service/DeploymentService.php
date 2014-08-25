@@ -6,6 +6,7 @@ namespace Lightwerk\SurfRunner\Service;
  *                                                                        *
  *                                                                        */
 
+use Lightwerk\SurfCaptain\Domain\Model\Deployment as SurfCaptainDeployment;
 use Lightwerk\SurfCaptain\Domain\Repository\DeploymentRepository;
 use Lightwerk\SurfRunner\Exception\NoAvailableDeploymentException;
 use Lightwerk\SurfRunner\Factory\DeploymentFactory;
@@ -14,10 +15,12 @@ use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Log\LoggerInterface;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 use TYPO3\Surf\Domain\Model\Deployment;
-use Lightwerk\SurfCaptain\Domain\Model\Deployment as SurfCaptainDeployment;
 
 /**
+ * Deployment Service
+ *
  * @Flow\Scope("singleton")
+ * @package Lightwerk\SurfRunner
  */
 class DeploymentService {
 
@@ -48,7 +51,10 @@ class DeploymentService {
 	/**
 	 * @param LoggerInterface $logger
 	 * @param boolean $dryRun
-	 * @return Deployment
+	 * @return \Lightwerk\SurfRunner\Domain\Model\Deployment
+	 * @throws \Lightwerk\SurfRunner\Exception\NoAvailableDeploymentException
+	 * @throws \Lightwerk\SurfRunner\Factory\Exception
+	 * @throws \TYPO3\Surf\Exception
 	 */
 	public function deployWaitingFromQueue(LoggerInterface $logger, $dryRun) {
 		/** @var SurfCaptainDeployment $surfCaptainDeployment */
@@ -77,7 +83,6 @@ class DeploymentService {
 		} else {
 			$deployment->simulate();
 		}
-		$this->emitDeploymentFinished($deployment, $surfCaptainDeployment);
 
 		return $deployment;
 	}
@@ -131,17 +136,20 @@ class DeploymentService {
 	protected function setStatusAfterDeployment(SurfCaptainDeployment $surfCaptainDeployment, $status) {
 		switch ($status) {
 			case Deployment::STATUS_SUCCESS:
-				$status = SurfCaptainDeployment::STATUS_SUCCESS;
+				$statusValue = SurfCaptainDeployment::STATUS_SUCCESS;
 				break;
 			case Deployment::STATUS_UNKNOWN:
+				// Fall through
 			case Deployment::STATUS_FAILED:
-				$status = SurfCaptainDeployment::STATUS_FAILED;
+				$statusValue = SurfCaptainDeployment::STATUS_FAILED;
 				break;
 			case Deployment::STATUS_CANCELLED:
-				$status = SurfCaptainDeployment::STATUS_CANCELLED;
+				$statusValue = SurfCaptainDeployment::STATUS_CANCELLED;
 				break;
+			default:
+				$statusValue = $status;
 		}
-		$surfCaptainDeployment->setStatus($status);
+		$surfCaptainDeployment->setStatus($statusValue);
 		$this->writeSurfCaptainDeployment($surfCaptainDeployment);
 	}
 }

@@ -7,12 +7,16 @@ namespace Lightwerk\SurfRunner\Factory;
  *                                                                        */
 
 use Lightwerk\SurfCaptain\Domain\Repository\DeploymentRepository;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 use Lightwerk\SurfRunner\Domain\Model\Deployment;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Log\LoggerInterface;
+use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 
 /**
+ * Deployment Factory
+ *
  * @Flow\Scope("singleton")
+ * @package Lightwerk\SurfRunner
  */
 class DeploymentFactory {
 
@@ -40,7 +44,8 @@ class DeploymentFactory {
 	 * @return Deployment
 	 * @throws Exception
 	 */
-	public function getDeploymentByDeploymentRecord(\Lightwerk\SurfCaptain\Domain\Model\Deployment $surfCaptainDeployment, \TYPO3\Flow\Log\LoggerInterface $logger) {
+	public function getDeploymentByDeploymentRecord(\Lightwerk\SurfCaptain\Domain\Model\Deployment $surfCaptainDeployment,
+													LoggerInterface $logger) {
 		$deployment = new Deployment(
 			$this->persistenceManager->getIdentifierByObject($surfCaptainDeployment)
 		);

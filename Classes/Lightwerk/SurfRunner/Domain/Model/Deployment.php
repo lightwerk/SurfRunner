@@ -7,9 +7,14 @@ namespace Lightwerk\SurfRunner\Domain\Model;
  *                                                                        */
 
 use Lightwerk\SurfCaptain\Utility\GeneralUtility;
-use TYPO3\Surf\Domain\Model\Application;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Surf\Domain\Model\Application;
 
+/**
+ * Deployment
+ *
+ * @package Lightwerk\SurfRunner
+ */
 class Deployment extends \TYPO3\Surf\Domain\Model\Deployment {
 
 	/**

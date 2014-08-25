@@ -9,6 +9,11 @@ namespace Lightwerk\SurfRunner\Domain\Model\Application\TYPO3\CMS;
 use Lightwerk\SurfRunner\Domain\Model\Application\AbstractApplication;
 use TYPO3\Flow\Annotations as Flow;
 
+/**
+ * Shared Application
+ *
+ * @package Lightwerk\SurfRunner
+ */
 class SharedApplication extends AbstractApplication {
 
 	/**

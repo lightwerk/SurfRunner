@@ -6,13 +6,17 @@ namespace Lightwerk\SurfRunner\Notification;
  *                                                                        *
  *                                                                        */
 
+use Lightwerk\SurfCaptain\Domain\Model\Deployment as SurfCaptainDeployment;
 use Lightwerk\SurfRunner\Notification\Driver\HipChatDriver;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\View\StandaloneView;
 use TYPO3\Surf\Domain\Model\Deployment;
-use Lightwerk\SurfCaptain\Domain\Model\Deployment as SurfCaptainDeployment;
 
 /**
+ * HitChat Notifier
+ *
  * @Flow\Scope("singleton")
+ * @package Lightwerk\SurfRunner
  */
 class HitChatNotifier {
 	/**
@@ -46,11 +50,11 @@ class HitChatNotifier {
 			return;
 		}
 
-		$view = new \TYPO3\Fluid\View\StandaloneView();
+		$view = new StandaloneView();
 		$view->setTemplatePathAndFilename($settings['templatePathAndFilename']);
 		$view->assign('deployment', $deployment)
-			 ->assign('surfCaptainDeployment', $surfCaptainDeployment)
-			 ->assign('settings', $settings);
+			->assign('surfCaptainDeployment', $surfCaptainDeployment)
+			->assign('settings', $settings);
 
 		$this->hipChatDriver->setSettings($settings)
 							->sendMessage($settings['room'], $view->render(), HipChatDriver::MESSAGE_FORMAT_HTML);
@@ -76,11 +80,11 @@ class HitChatNotifier {
 				$color = HipChatDriver::MESSAGE_COLOR_GREEN;
 		}
 
-		$view = new \TYPO3\Fluid\View\StandaloneView();
+		$view = new StandaloneView();
 		$view->setTemplatePathAndFilename($settings['templatePathAndFilename']);
 		$view->assign('deployment', $deployment)
-			 ->assign('surfCaptainDeployment', $surfCaptainDeployment)
-			 ->assign('settings', $settings);
+			->assign('surfCaptainDeployment', $surfCaptainDeployment)
+			->assign('settings', $settings);
 
 		$this->hipChatDriver->setSettings($settings)
 							->sendMessage($settings['room'], $view->render(), HipChatDriver::MESSAGE_FORMAT_HTML, TRUE, $color);

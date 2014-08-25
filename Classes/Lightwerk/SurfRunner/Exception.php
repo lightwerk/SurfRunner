@@ -6,5 +6,10 @@ namespace Lightwerk\SurfRunner;
  *                                                                        *
  *                                                                        */
 
+/**
+ * Class Exception
+ *
+ * @package Lightwerk\SurfRunner
+ */
 class Exception extends \TYPO3\Flow\Exception {
 }

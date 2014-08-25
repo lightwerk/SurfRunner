@@ -11,11 +11,14 @@ use TYPO3\Flow\Package\Package as BasePackage;
 
 /**
  * The Surf Runner Package of Lightwerk
+ *
+ * @package Lightwerk\SurfRunner
  */
 class Package extends BasePackage {
 
 	/**
-	 * Invokes custom PHP code directly after the package manager has been initialized.
+	 * Invokes custom PHP code directly after the package manager has been
+	 * initialized.
 	 *
 	 * @param Bootstrap $bootstrap The current bootstrap
 	 * @return void
@@ -24,8 +27,18 @@ class Package extends BasePackage {
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
 
 		if (!$bootstrap->getContext()->isProduction()) {
-			$dispatcher->connect('Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentStarted', 'Lightwerk\SurfRunner\Notification\HitChatNotifier', 'deploymentStarted');
-			$dispatcher->connect('Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentFinished', 'Lightwerk\SurfRunner\Notification\HitChatNotifier', 'deploymentFinished');
+			$dispatcher->connect(
+				'Lightwerk\SurfRunner\Service\DeploymentService',
+				'deploymentStarted',
+				'Lightwerk\SurfRunner\Notification\HitChatNotifier',
+				'deploymentStarted'
+			);
+			$dispatcher->connect(
+				'Lightwerk\SurfRunner\Service\DeploymentService',
+				'deploymentFinished',
+				'Lightwerk\SurfRunner\Notification\HitChatNotifier',
+				'deploymentFinished'
+			);
 		}
 	}
 }

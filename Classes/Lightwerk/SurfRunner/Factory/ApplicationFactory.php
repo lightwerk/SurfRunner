@@ -8,17 +8,20 @@ namespace Lightwerk\SurfRunner\Factory;
 
 use Lightwerk\SurfRunner\Domain\Model\Application\AbstractApplication;
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Surf\Domain\Model\Application;
 use TYPO3\Surf\Domain\Model\Node;
 
 /**
+ * Application Factory
+ *
  * @Flow\Scope("singleton")
+ * @package Lightwerk\SurfRunner
  */
 class ApplicationFactory {
 
 	/**
 	 * @param array $configurations
-	 * @return Application[]
+	 * @return AbstractApplication[]
+	 * @throws Exception
 	 */
 	public function getApplicationsByConfiguration(array $configurations) {
 		$applications = array();
@@ -35,7 +38,8 @@ class ApplicationFactory {
 				break;
 			}
 			// Do not change the Application name!
-			// @see \Lightwerk\SurfRunner\Application\AbstractApplication->getTaskNameForApplication()
+			// @see \Lightwerk\SurfRunner\Application\AbstractApplication
+			// ->getTaskNameForApplication()
 			/** @var AbstractApplication $application */
 			$application = new $applicationClass('#' . $iteration . ' ' . $configuration['type']);
 
@@ -64,6 +68,7 @@ class ApplicationFactory {
 	/**
 	 * @param array $configuration
 	 * @return Node
+	 * @throws Exception
 	 */
 	protected function getNodeByConfiguration(array $configuration) {
 		if (empty($configuration['name'])) {
