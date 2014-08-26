@@ -19,6 +19,12 @@ use TYPO3\Surf\Domain\Model\Node;
 class ApplicationFactory {
 
 	/**
+	 * @Flow\Inject
+	 * @var NodeFactory
+	 */
+	protected $nodeFactory;
+
+	/**
 	 * @param array $configurations
 	 * @return AbstractApplication[]
 	 * @throws Exception
@@ -57,38 +63,11 @@ class ApplicationFactory {
 				throw new Exception('No nodes are given in application configuration', 1408396220);
 			}
 			foreach ($configuration['nodes'] as $nodeConfiguration) {
-				$application->addNode($this->getNodeByConfiguration($nodeConfiguration));
+				$application->addNode($this->nodeFactory->getNodeByArray($nodeConfiguration));
 			}
 
 			$applications[] = $application;
 		}
 		return $applications;
-	}
-
-	/**
-	 * @param array $configuration
-	 * @return Node
-	 * @throws Exception
-	 */
-	protected function getNodeByConfiguration(array $configuration) {
-		if (empty($configuration['name'])) {
-			throw new Exception('Name is not given for node', 1408396327);
-		}
-		if (empty($configuration['hostname'])) {
-			throw new Exception('Hostname is not given for node', 1408396400);
-		}
-		$node = new Node($configuration['name']);
-		foreach ($configuration as $key => $value) {
-			if ($key === 'name') {
-				continue;
-			}
-			$method = 'set' . ucfirst($key);
-			if (method_exists($node, $method)) {
-				$node->$method($value);
-			} else {
-				$node->setOption($key, $value);
-			}
-		}
-		return $node;
 	}
 }

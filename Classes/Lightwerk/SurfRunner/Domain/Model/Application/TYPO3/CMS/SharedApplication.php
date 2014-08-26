@@ -17,12 +17,25 @@ use TYPO3\Flow\Annotations as Flow;
 class SharedApplication extends AbstractApplication {
 
 	/**
-	 * Constructor
-	 *
-	 * @param string $name
+	 * @var array
 	 */
-	public function __construct($name = 'TYPO3 CMS Shared') {
-		parent::__construct($name);
-	}
-
+	protected $tasks = array(
+//		'initialize' => array(),	// Initialize directories etc. (first time deploy)
+//		'package' => array(),			// Local preparation of and packaging of application assets
+		'transfer' => array(		// Transfer of application assets to the node
+			'lightwerk.surftasks:typo3:cms:syncshared',
+		),
+//		'update' => array(),		// Update the application assets on the node
+		'migrate' => array(			// Migrate (Doctrine, custom)
+			'lightwerk.surftasks:typo3:cms:clearcache',
+			'lightwerk.surftasks:typo3:cms:updatedatabase',
+		),
+		'finalize' => array(		// Prepare final release (e.g. warmup)
+			'lightwerk.surftasks:deploymentlog',
+//			'lightwerk.surftasks:git:tagnodedeployment',
+		),
+//		'test' => array(),			// Smoke test
+//		'switch' => array(),		// Do symlink to current release
+//		'cleanup' => array(),		// Delete temporary files or previous releases
+	);
 }
