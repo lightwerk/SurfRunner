@@ -2,7 +2,7 @@ Lightwerk:
   SurfRunner:
     notification:
       hipChat:
-#        privateToken: 'Please define this value in root/Configuration/Settings.yaml'
+#        authToken: 'Please define this value in root/Configuration/Settings.yaml'
 #        room: 1234
 #        user: UserName
 #        frontendUrl: 'http://.../#/deployment/'
@@ -19,6 +19,7 @@ Lightwerk:
 #          deploymentStarted:
 #            room: 123
 #            user: UserName
+#            authToken: ...
 #            ...
 #          deploymentFinished:
 #            ...
