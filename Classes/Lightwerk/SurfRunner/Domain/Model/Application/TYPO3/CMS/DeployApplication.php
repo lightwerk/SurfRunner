@@ -45,6 +45,7 @@ class DeployApplication extends AbstractApplication {
 			'lightwerk.surftasks:typo3:cms:clearcache',
 			'lightwerk.surftasks:typo3:cms:createuploadfolders',
 			'lightwerk.surftasks:typo3:cms:updatedatabase',
+			'second-lightwerk.surftasks:typo3:cms:clearcache',
 		),
 		'finalize' => array(
 			'lightwerk.surftasks:deploymentlog',
@@ -74,6 +75,9 @@ class DeployApplication extends AbstractApplication {
 			'options' => array(
 				'nodeName' => 'localhost',
 			),
+		),
+		'second-lightwerk.surftasks:typo3:cms:clearcache' => array(
+			'baseTask' => 'lightwerk.surftasks:typo3:cms:clearcache'
 		),
 	);
 }

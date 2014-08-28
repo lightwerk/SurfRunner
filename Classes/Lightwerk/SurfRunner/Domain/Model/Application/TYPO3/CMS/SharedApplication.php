@@ -38,7 +38,7 @@ class SharedApplication extends AbstractApplication {
 		),
 		'transfer' => array(
 			'lightwerk.surftasks:typo3:cms:syncshared',
-			'lightwerk.surftasks:transfer:copymsqldump',
+			'lightwerk.surftasks:transfer:copymysqldump',
 		),
 		'update' => array(
 			'lightwerk.surftasks:mysql:import',
@@ -46,6 +46,7 @@ class SharedApplication extends AbstractApplication {
 		'migrate' => array(
 			'lightwerk.surftasks:typo3:cms:clearcache',
 			'lightwerk.surftasks:typo3:cms:updatedatabase',
+			'second-lightwerk.surftasks:typo3:cms:clearcache',
 		),
 		'finalize' => array(
 			'lightwerk.surftasks:deploymentlog',
@@ -53,5 +54,14 @@ class SharedApplication extends AbstractApplication {
 		// 'test' => array(),
 		// 'switch' => array(),
 		// 'cleanup' => array(),
+	);
+
+	/**
+	 * @var array
+	 */
+	protected $taskOptions = array(
+		'second-lightwerk.surftasks:typo3:cms:clearcache' => array(
+			'baseTask' => 'lightwerk.surftasks:typo3:cms:clearcache'
+		),
 	);
 }
