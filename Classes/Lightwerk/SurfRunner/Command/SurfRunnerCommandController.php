@@ -33,10 +33,11 @@ class SurfRunnerCommandController extends CommandController {
 	 * Deploy one from waiting queue
 	 *
 	 * @param boolean $dryRun
+	 * @param boolean $disableAnsi
 	 * @return void
 	 */
-	public function deployWaitingFromQueueCommand($dryRun = FALSE) {
-		$logger = $this->getLogger();
+	public function deployWaitingFromQueueCommand($dryRun = FALSE, $disableAnsi = FALSE) {
+		$logger = $this->getLogger($disableAnsi);
 		try {
 			$deployment = $this->deploymentService->deployWaitingFromQueue($logger, $dryRun);
 			$status = $deployment->getStatus();
@@ -54,12 +55,13 @@ class SurfRunnerCommandController extends CommandController {
 	}
 
 	/**
+	 * @param boolean $disableAnsi
 	 * @return LoggerInterface
 	 */
-	protected function getLogger() {
+	protected function getLogger($disableAnsi = FALSE) {
 		$logger = new Logger();
 		$logger->addBackend(
-			new AnsiConsoleBackend(array('severityThreshold' => LOG_DEBUG))
+			new AnsiConsoleBackend(array('severityThreshold' => LOG_DEBUG, 'disableAnsi' => $disableAnsi))
 		);
 		return $logger;
 	}
