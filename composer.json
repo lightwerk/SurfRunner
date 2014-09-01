@@ -2,7 +2,7 @@
     "name": "lightwerk/surfrunner",
     "type": "typo3-flow-package",
     "description": "SurfRunner executes Surf Deployments with JSON configurations.",
-    "license": "GPL-3.0+",
+    "license": ["GPL-3.0+"],
     "homepage": "https://bitbucket.org/lightwerk/surfrunner",
     "keywords": [
         "TYPO3 Surf",
