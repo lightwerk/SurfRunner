@@ -26,15 +26,13 @@ class Package extends BasePackage {
 	public function boot(Bootstrap $bootstrap) {
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
 
-		if (!$bootstrap->getContext()->isProduction()) {
-			$dispatcher->connect(
-				'Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentStarted',
-				'Lightwerk\SurfRunner\Notification\HitChatNotifier', 'deploymentStarted'
-			);
-			$dispatcher->connect(
-				'Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentFinished',
-				'Lightwerk\SurfRunner\Notification\HitChatNotifier', 'deploymentFinished'
-			);
-		}
+		$dispatcher->connect(
+			'Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentStarted',
+			'Lightwerk\SurfRunner\Notification\HitChatNotifier', 'deploymentStarted'
+		);
+		$dispatcher->connect(
+			'Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentFinished',
+			'Lightwerk\SurfRunner\Notification\HitChatNotifier', 'deploymentFinished'
+		);
 	}
 }
