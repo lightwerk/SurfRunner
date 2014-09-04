@@ -48,6 +48,7 @@ class DeployApplication extends AbstractApplication {
 		),
 		'finalize' => array(
 			'lightwerk.surftasks:deploymentlog',
+			'lightwerk.surftasks:git:removedeploybranch',
 			'lightwerk.surftasks:git:tagnodedeployment',
 		),
 		// 'test' => array(),
