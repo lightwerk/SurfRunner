@@ -34,14 +34,14 @@ class SharedApplication extends AbstractApplication {
 			'lightwerk.surftasks:transfer:assureconnection',
 		),
 		'package' => array(
-			'lightwerk.surftasks:mysql:dump',
+			'lightwerk.surftasks:database:dump',
 		),
 		'transfer' => array(
 			'lightwerk.surftasks:typo3:cms:syncshared',
-			'lightwerk.surftasks:transfer:copymysqldump',
+			'lightwerk.surftasks:database:transfer',
 		),
 		'update' => array(
-			'lightwerk.surftasks:mysql:import',
+			'lightwerk.surftasks:database:import',
 		),
 		'migrate' => array(
 			'lightwerk.surftasks:typo3:cms:clearcache',
