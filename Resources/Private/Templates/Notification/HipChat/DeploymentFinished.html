@@ -1,7 +1,7 @@
 Finished <a href="{settings.frontendUrl}#/project/{surfCaptainDeployment.repositoryIdentifier}/deployment/{deployment.name}">Deployment</a>
 
 <f:if condition="{surfCaptainDeployment.repositoryUrl}">
-	of {surfCaptainDeployment.repositoryIdentifier}
+	of <f:format.case>{surfCaptainDeployment.repositoryIdentifier}</f:format.case>
 </f:if>
 
 with "{surfCaptainDeployment.status}":
