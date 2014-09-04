@@ -1,8 +1,24 @@
-Started Deployment..
-<ul>
-	<f:if condition="{surfCaptainDeployment.repositoryUrl}"><li>Repository URL: {surfCaptainDeployment.repositoryUrl}</li></f:if>
-	<f:for each="{deployment.nodes}" as="node"><li>Server: {node.hostname}</li></f:for>
-	<f:if condition="{surfCaptainDeployment.referenceName}"><li>{surfCaptainDeployment.referenceName}</li></f:if>
-	<f:if condition="{surfCaptainDeployment.type}"><li>Type: {surfCaptainDeployment.type}</li></f:if>
-	<f:if condition="{settings.frontendUrl}"><li>Link: <a href="{settings.frontendUrl}{deployment.name}">{settings.frontendUrl}{deployment.name}</a></li></f:if>
-</ul>
+Started <a href="{settings.frontendUrl}#/project/{surfCaptainDeployment.repositoryIdentifier}/deployment/{deployment.name}">Deployment</a>
+
+<f:if condition="{surfCaptainDeployment.repositoryUrl}">
+	of {surfCaptainDeployment.repositoryIdentifier}
+</f:if>
+..
+
+<br />
+
+<f:for each="{deployment.nodes}" as="node">
+	Server:
+	<a href="http://{node.hostname}">{node.hostname}</a>
+	|
+</f:for>
+
+<f:if condition="{surfCaptainDeployment.referenceName}">
+	{surfCaptainDeployment.referenceName}
+	|
+</f:if>
+
+<f:if condition="{surfCaptainDeployment.type}">
+	Type:
+	{surfCaptainDeployment.type}
+</f:if>
