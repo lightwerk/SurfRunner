@@ -59,12 +59,21 @@ class DeploymentService {
 	public function deployWaitingFromQueue(LoggerInterface $logger, $dryRun) {
 		/** @var SurfCaptainDeployment $surfCaptainDeployment */
 		$surfCaptainDeployment = $this->deploymentRepository->findOneByStatus(SurfCaptainDeployment::STATUS_WAITING);
-		if ($surfCaptainDeployment instanceof SurfCaptainDeployment === FALSE) {
+		if (
+			$surfCaptainDeployment instanceof SurfCaptainDeployment === FALSE ||
+			$this->deploymentRepository->countByRepositoryUrlAndStatus($surfCaptainDeployment->getRepositoryUrl(), SurfCaptainDeployment::STATUS_RUNNING) > 0
+		) {
 			throw new NoAvailableDeploymentException();
 		}
 
 		if (!$dryRun) {
 			$this->setStatusBeforeDeployment($surfCaptainDeployment);
+		}
+
+		if ($this->deploymentRepository->countByRepositoryUrlAndStatus($surfCaptainDeployment->getRepositoryUrl(), SurfCaptainDeployment::STATUS_RUNNING) > 1) {
+			// Stop if two deployments of the same repositoryUrl are running
+			$this->setStatusBackToWaiting($surfCaptainDeployment);
+			throw new NoAvailableDeploymentException();
 		}
 
 		$logger->addBackend(
@@ -125,6 +134,15 @@ class DeploymentService {
 	 */
 	protected function setStatusBeforeDeployment(SurfCaptainDeployment $surfCaptainDeployment) {
 		$surfCaptainDeployment->setStatus(SurfCaptainDeployment::STATUS_RUNNING);
+		$this->writeSurfCaptainDeployment($surfCaptainDeployment);
+	}
+
+	/**
+	 * @param SurfCaptainDeployment $surfCaptainDeployment
+	 * @return void
+	 */
+	protected function setStatusBackToWaiting(SurfCaptainDeployment $surfCaptainDeployment) {
+		$surfCaptainDeployment->setStatus(SurfCaptainDeployment::STATUS_WAITING);
 		$this->writeSurfCaptainDeployment($surfCaptainDeployment);
 	}
 
