@@ -42,7 +42,7 @@ class DeployApplication extends AbstractApplication {
 		),
 		// 'update' => array(),
 		'migrate' => array(
-			'lightwerk.surftasks:clearphpcacheuris',
+			'lightwerk.surftasks:clearphpcache',
 			'lightwerk.surftasks:typo3:cms:clearcache',
 			'lightwerk.surftasks:typo3:cms:createuploadfolders',
 			'lightwerk.surftasks:typo3:cms:updatedatabase',
