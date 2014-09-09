@@ -42,6 +42,7 @@ class DeployApplication extends AbstractApplication {
 		),
 		// 'update' => array(),
 		'migrate' => array(
+			'lightwerk.surftasks:calluris',
 			'lightwerk.surftasks:typo3:cms:clearcache',
 			'lightwerk.surftasks:typo3:cms:createuploadfolders',
 			'lightwerk.surftasks:typo3:cms:updatedatabase',
@@ -50,7 +51,6 @@ class DeployApplication extends AbstractApplication {
 			'lightwerk.surftasks:deploymentlog',
 			'lightwerk.surftasks:git:removedeploybranch',
 			'lightwerk.surftasks:git:tagnodedeployment',
-			'lightwerk.surftasks:calluris',
 		),
 		// 'test' => array(),
 		// 'switch' => array(),
