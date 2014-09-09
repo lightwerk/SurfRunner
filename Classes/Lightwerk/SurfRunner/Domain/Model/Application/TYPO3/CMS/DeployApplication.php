@@ -50,7 +50,7 @@ class DeployApplication extends AbstractApplication {
 			'lightwerk.surftasks:deploymentlog',
 			'lightwerk.surftasks:git:removedeploybranch',
 			'lightwerk.surftasks:git:tagnodedeployment',
-			'lightwerk.surftasks:calluri',
+			'lightwerk.surftasks:calluris',
 		),
 		// 'test' => array(),
 		// 'switch' => array(),
