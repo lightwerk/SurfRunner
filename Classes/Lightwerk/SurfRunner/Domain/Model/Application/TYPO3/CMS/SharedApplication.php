@@ -31,8 +31,8 @@ class SharedApplication extends AbstractApplication {
 	 */
 	protected $tasks = array(
 		'initialize' => array(
-			'lightwerk.surftasks:transfer:assureconnection',
 			'lightwerk.surftasks:ssh:opentunnel',
+			'lightwerk.surftasks:transfer:assureconnection',
 		),
 		'package' => array(
 			'lightwerk.surftasks:database:dump',
