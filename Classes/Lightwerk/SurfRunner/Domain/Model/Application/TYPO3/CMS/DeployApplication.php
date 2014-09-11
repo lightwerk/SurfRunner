@@ -31,7 +31,6 @@ class DeployApplication extends AbstractApplication {
 	 */
 	protected $tasks = array(
 		'initialize' => array(
-			'lightwerk.surftasks:ssh:opentunnel',
 			'lightwerk.surftasks:transfer:assureconnection',
 		),
 		'package' => array(
@@ -52,7 +51,6 @@ class DeployApplication extends AbstractApplication {
 			'lightwerk.surftasks:deploymentlog',
 			'lightwerk.surftasks:git:removedeploybranch',
 			'lightwerk.surftasks:git:tagnodedeployment',
-			'lightwerk.surftasks:ssh:closetunnel',
 		),
 		// 'test' => array(),
 		// 'switch' => array(),
