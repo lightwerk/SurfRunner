@@ -9,11 +9,11 @@ namespace Lightwerk\SurfRunner\Domain\Model\Application;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
- * Copy Application
+ * Deploy Application
  *
  * @package Lightwerk\SurfRunner
  */
-class CopyApplication extends AbstractApplication {
+class DeployApplication extends AbstractApplication {
 
 	/**
 	 * 1. initialize: Initialize directories etc. (first time deploy)
