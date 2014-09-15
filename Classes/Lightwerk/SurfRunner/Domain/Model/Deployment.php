@@ -31,10 +31,11 @@ class Deployment extends \TYPO3\Surf\Domain\Model\Deployment {
 	public function getWorkspacePath(Application $application) {
 		$workspacePath = FLOW_PATH_DATA . 'Surf/';
 		if ($application->hasOption('repositoryUrl')) {
+			$urlParts = GeneralUtility::getUrlPartsFromRepositoryUrl($application->getOption('repositoryUrl'));
 			$workspacePath .= preg_replace(
 				'/[^a-zA-Z0-9]/',
 				'-',
-				GeneralUtility::getUrlPartsFromRepositoryUrl($application->getOption('repositoryUrl'))['path']
+				$urlParts['path']
 			);
 			$workspacePath .= '_' . substr(sha1($application->getOption('repositoryUrl')), 0, 5);
 		} else {
