@@ -1,0 +1,42 @@
+<f:section name="Enabled">
+	{settings.enabled}
+</f:section>
+
+<f:section name="Subject">
+	SurfCaptain Deployment to {deployment.firstNode.hostname} ({deployment.firstNode.name})
+</f:section>
+
+<f:section name="Body">
+	<f:if condition="{surfCaptainDeployment.status} == 'running'">
+		<f:then>Started</f:then>
+		<f:else>Finished</f:else>
+	</f:if> <a href="{settings.frontendUrl}#/project/{surfCaptainDeployment.repositoryIdentifier}/deployment/{deployment.name}">Deployment</a>
+
+	<f:if condition="{surfCaptainDeployment.repositoryUrl}">
+		of <b><f:format.case>{surfCaptainDeployment.repositoryIdentifier}</f:format.case></b>
+	</f:if>
+
+	<f:if condition="{surfCaptainDeployment.status} == 'running'">
+		<f:then>..</f:then>
+		<f:else>with "{surfCaptainDeployment.status}":</f:else>
+	</f:if>
+
+	<br />
+
+	<f:if condition="{deployment.firstNode}">
+		Server:
+		<a href="http://{deployment.firstNode.hostname}">{deployment.firstNode.hostname}</a>
+		({deployment.firstNode.name})
+		|
+	</f:if>
+
+	<f:if condition="{surfCaptainDeployment.referenceName}">
+		{surfCaptainDeployment.referenceName}
+		|
+	</f:if>
+
+	<f:if condition="{surfCaptainDeployment.type}">
+		Type:
+		{surfCaptainDeployment.type}
+	</f:if>
+</f:section>

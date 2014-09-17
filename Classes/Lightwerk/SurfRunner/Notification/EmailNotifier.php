@@ -11,14 +11,15 @@ use Lightwerk\SurfRunner\Notification\Driver\HipChatDriver;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Fluid\View\StandaloneView;
 use TYPO3\Surf\Domain\Model\Deployment;
+use TYPO3\SwiftMailer\Message;
 
 /**
- * HitChat Notifier
+ * E-Mail Notifier
  *
  * @Flow\Scope("singleton")
  * @package Lightwerk\SurfRunner
  */
-class HitChatNotifier {
+class EmailNotifier {
 	/**
 	 * @Flow\Inject
 	 * @var HipChatDriver
@@ -35,7 +36,7 @@ class HitChatNotifier {
 	 * @return void
 	 */
 	public function injectSettings(array $settings) {
-		$this->settings = $settings['notification']['hipChat'];
+		$this->settings = $settings['notification']['email'];
 	}
 
 	/**
@@ -44,7 +45,7 @@ class HitChatNotifier {
 	 * @return void
 	 */
 	public function deploymentStarted(Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {
-		$this->sendHipChatMessage('deploymentStarted', $deployment, $surfCaptainDeployment);
+		$this->sendMail('deploymentStarted', $deployment, $surfCaptainDeployment);
 	}
 
 	/**
@@ -53,7 +54,7 @@ class HitChatNotifier {
 	 * @return void
 	 */
 	public function deploymentFinished(Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {
-		$this->sendHipChatMessage('deploymentFinished', $deployment, $surfCaptainDeployment);
+		$this->sendMail('deploymentFinished', $deployment, $surfCaptainDeployment);
 	}
 
 	/**
@@ -78,7 +79,7 @@ class HitChatNotifier {
 	 * @param SurfCaptainDeployment $surfCaptainDeployment
 	 * @return void
 	 */
-	protected function sendHipChatMessage($key, Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {
+	protected function sendMail($key, Deployment $deployment, SurfCaptainDeployment $surfCaptainDeployment) {
 		$settings = $this->getSettingsForFunction($key, $surfCaptainDeployment);
 		$pathParts = pathinfo($settings['templatePathAndFilename']);
 
@@ -97,25 +98,23 @@ class HitChatNotifier {
 
 		switch (strtolower($pathParts['extension'])) {
 			case 'txt':
-				$format = HipChatDriver::MESSAGE_FORMAT_TEXT;
+				$format = 'text/plain';
 				break;
 			default:
-				$format = HipChatDriver::MESSAGE_FORMAT_HTML;
+				$format = 'text/html';
 		}
 
-		switch ($surfCaptainDeployment->getStatus()) {
-			case SurfCaptainDeployment::STATUS_RUNNING:
-				$color = HipChatDriver::MESSAGE_COLOR_YELLOW;
-				break;
-			case SurfCaptainDeployment::STATUS_FAILED:
-				$color = HipChatDriver::MESSAGE_COLOR_RED;
-				break;
-			default:
-				$color = HipChatDriver::MESSAGE_COLOR_GREEN;
+		$mail = new Message();
+		$mail->setFrom($settings['from'])
+			->setTo($settings['to'])
+			->setSubject(trim($view->renderSection('Subject')))
+			->setBody(trim($view->renderSection('Body')), $format, 'utf-8');
+		if (!empty($settings['cc'])) {
+			$mail->setCc($settings['cc']);
 		}
-
-		$this->hipChatDriver
-			->setSettings($settings)
-			->sendMessage($settings['room'], $view->renderSection('Message'), $format, TRUE, $color);
+		if (!empty($settings['bcc'])) {
+			$mail->setBcc($settings['bcc']);
+		}
+		$mail->send();
 	}
 }

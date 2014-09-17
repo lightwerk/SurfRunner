@@ -9,6 +9,7 @@ namespace Lightwerk\SurfRunner\Domain\Model;
 use Lightwerk\SurfCaptain\Utility\GeneralUtility;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Surf\Domain\Model\Application;
+use TYPO3\Surf\Domain\Model\Node;
 
 /**
  * Deployment
@@ -43,5 +44,16 @@ class Deployment extends \TYPO3\Surf\Domain\Model\Deployment {
 			$workspacePath .= $this->getName() . '/' . $application->getName();
 		}
 		return $workspacePath;
+	}
+
+	/**
+	 * @return Node|NULL
+	 */
+	public function getFirstNode() {
+		$nodes = $this->getNodes();
+		foreach ($nodes as $node) {
+			return $node;
+		}
+		return NULL;
 	}
 }

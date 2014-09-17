@@ -26,6 +26,7 @@ class Package extends BasePackage {
 	public function boot(Bootstrap $bootstrap) {
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
 
+		// HitChat Notifier
 		$dispatcher->connect(
 			'Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentStarted',
 			'Lightwerk\SurfRunner\Notification\HitChatNotifier', 'deploymentStarted'
@@ -33,6 +34,16 @@ class Package extends BasePackage {
 		$dispatcher->connect(
 			'Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentFinished',
 			'Lightwerk\SurfRunner\Notification\HitChatNotifier', 'deploymentFinished'
+		);
+
+		// Email Notifier
+		$dispatcher->connect(
+			'Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentStarted',
+			'Lightwerk\SurfRunner\Notification\EmailNotifier', 'deploymentStarted'
+		);
+		$dispatcher->connect(
+			'Lightwerk\SurfRunner\Service\DeploymentService', 'deploymentFinished',
+			'Lightwerk\SurfRunner\Notification\EmailNotifier', 'deploymentFinished'
 		);
 	}
 }

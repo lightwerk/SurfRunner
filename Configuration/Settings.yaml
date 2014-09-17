@@ -2,6 +2,7 @@ Lightwerk:
   SurfRunner:
     notification:
       hipChat:
+        templatePathAndFilename: resource://Lightwerk.SurfRunner/Private/Templates/Notification/HipChat.html
 #        authToken: 'Please define this value in root/Configuration/Settings.yaml'
 #        room: 1234
 #        user: UserName
@@ -9,11 +10,9 @@ Lightwerk:
 
         deploymentStarted:
           enabled: 0
-          templatePathAndFilename: Packages/Application/Lightwerk.SurfRunner/Resources/Private/Templates/Notification/HipChat/DeploymentStarted.html
 
         deploymentFinished:
           enabled: 0
-          templatePathAndFilename: Packages/Application/Lightwerk.SurfRunner/Resources/Private/Templates/Notification/HipChat/DeploymentFinished.html
 
 #        'git@git.domain.de:namepsace/project.git':
 #          deploymentStarted:
@@ -23,3 +22,21 @@ Lightwerk:
 #            ...
 #          deploymentFinished:
 #            ...
+
+      email:
+        templatePathAndFilename: resource://Lightwerk.SurfRunner/Private/Templates/Notification/Email.html
+#        frontendUrl: 'http://.../'
+#        to:
+#          surfCaptain@email.de: 'Last Name, First Name'
+#        from:
+#          surfCaptain@email.de: 'Last Name, First Name'
+#        cc:
+#          ...
+#        bcc:
+#          ...
+
+        deploymentStarted:
+          enabled: 0
+
+        deploymentFinished:
+          enabled: 0
