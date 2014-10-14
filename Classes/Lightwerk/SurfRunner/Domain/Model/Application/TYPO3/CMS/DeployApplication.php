@@ -36,6 +36,7 @@ class DeployApplication extends AbstractApplication {
 		'package' => array(
 			'typo3.surf:package:git',
 			'typo3.surf:composer:install',
+			'lightwerk.surftasks:git:clean',
 		),
 		'transfer' => array(
 			'lightwerk.surftasks:transfer:rsync',
@@ -70,6 +71,11 @@ class DeployApplication extends AbstractApplication {
 			'options' => array(
 				'nodeName' => 'localhost',
 				'composerCommandPath' => 'composer',
+			),
+		),
+		'lightwerk.surftasks:git:clean' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
 			),
 		),
 		'lightwerk.surftasks:git:tagnodedeployment' => array(
