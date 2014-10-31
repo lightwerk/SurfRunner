@@ -37,6 +37,7 @@ class DeployApplication extends AbstractApplication {
 			'typo3.surf:package:git',
 			'typo3.surf:composer:install',
 			'lightwerk.surftasks:git:clean',
+			'lightwerk.surftasks:assets:gulp',
 		),
 		'transfer' => array(
 			'lightwerk.surftasks:transfer:rsync',
