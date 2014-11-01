@@ -34,19 +34,20 @@ class SharedApplication extends AbstractApplication {
 			'lightwerk.surftasks:transfer:assureconnection',
 		),
 		'package' => array(
-			'lightwerk.surftasks:database:dump',
+//			'lightwerk.surftasks:database:dump',
 		),
 		'transfer' => array(
 			'lightwerk.surftasks:typo3:cms:syncshared',
-			'lightwerk.surftasks:database:transfer',
+//			'lightwerk.surftasks:database:transfer',
 		),
 		'update' => array(
-			'lightwerk.surftasks:database:import',
+//			'lightwerk.surftasks:database:import',
 		),
 		'migrate' => array(
+			'lightwerk.surftasks:clearphpcache',
 			'lightwerk.surftasks:typo3:cms:clearcache',
+			'lightwerk.surftasks:typo3:cms:createuploadfolders',
 			'lightwerk.surftasks:typo3:cms:updatedatabase',
-			'second-lightwerk.surftasks:typo3:cms:clearcache',
 		),
 		'finalize' => array(
 			'lightwerk.surftasks:deploymentlog',
