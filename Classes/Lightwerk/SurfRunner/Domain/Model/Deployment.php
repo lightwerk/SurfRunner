@@ -19,10 +19,11 @@ use TYPO3\Surf\Domain\Model\Node;
 class Deployment extends \TYPO3\Surf\Domain\Model\Deployment {
 
 	/**
-	 * @return string The release identifier
+	 * @param \TYPO3\Surf\Domain\Model\Application $application
+	 * @return string
 	 */
-	public function getReleaseIdentifier() {
-		return 'htdocs';
+	public function getApplicationReleasePath(Application $application) {
+		return $application->getReleasesPath();
 	}
 
 	/**
