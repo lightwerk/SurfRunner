@@ -73,5 +73,10 @@ class DeployApplication extends AbstractApplication {
 				'nodeName' => 'localhost',
 			),
 		),
+		'lightwerk.surftasks:assets:gulp' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
+			),
+		),
 	);
 }
