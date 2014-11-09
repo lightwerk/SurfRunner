@@ -64,5 +64,10 @@ class SharedApplication extends AbstractApplication {
 		'second-lightwerk.surftasks:typo3:cms:clearcache' => array(
 			'baseTask' => 'lightwerk.surftasks:typo3:cms:clearcache'
 		),
+		'lightwerk.surftasks:deploymentlog' => array(
+			'options' => array(
+				'deploymentLogTargetPath' => '..',
+			),
+		),
 	);
 }

@@ -89,5 +89,10 @@ class DeployApplication extends AbstractApplication {
 				'nodeName' => 'localhost',
 			),
 		),
+		'lightwerk.surftasks:deploymentlog' => array(
+			'options' => array(
+				'deploymentLogTargetPath' => '..',
+			),
+		),
 	);
 }
