@@ -37,6 +37,7 @@ class SharedApplication extends AbstractApplication {
 //			'lightwerk.surftasks:database:dump',
 		),
 		'transfer' => array(
+			'lightwerk.surftasks:lockfile:create',
 			'lightwerk.surftasks:typo3:cms:syncshared',
 //			'lightwerk.surftasks:database:transfer',
 		),
@@ -50,6 +51,7 @@ class SharedApplication extends AbstractApplication {
 			'lightwerk.surftasks:typo3:cms:updatedatabase',
 		),
 		'finalize' => array(
+			'lightwerk.surftasks:lockfile:remove',
 			'lightwerk.surftasks:deploymentlog',
 		),
 		// 'test' => array(),

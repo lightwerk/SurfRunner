@@ -40,6 +40,7 @@ class DeployApplication extends AbstractApplication {
 			'lightwerk.surftasks:assets:gulp',
 		),
 		'transfer' => array(
+			'lightwerk.surftasks:lockfile:create',
 			'lightwerk.surftasks:transfer:rsync',
 		),
 		// 'update' => array(),
@@ -50,6 +51,7 @@ class DeployApplication extends AbstractApplication {
 			'lightwerk.surftasks:typo3:cms:updatedatabase',
 		),
 		'finalize' => array(
+			'lightwerk.surftasks:lockfile:remove',
 			'lightwerk.surftasks:deploymentlog',
 			'lightwerk.surftasks:git:removedeploybranch',
 			'lightwerk.surftasks:git:tagnodedeployment',
