@@ -40,6 +40,7 @@ class DeployApplication extends AbstractApplication {
 			'lightwerk.surftasks:assets:gulp',
 		),
 		'transfer' => array(
+			'lightwerk.surftasks:git:stoponchanges',
 			'lightwerk.surftasks:lockfile:create',
 			'lightwerk.surftasks:transfer:rsync',
 		),
