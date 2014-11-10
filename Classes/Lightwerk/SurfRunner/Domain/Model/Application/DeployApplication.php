@@ -83,5 +83,10 @@ class DeployApplication extends AbstractApplication {
 				'deploymentLogTargetPath' => '..',
 			),
 		),
+		'lightwerk.surftasks:git:clean' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
+			),
+		),
 	);
 }
