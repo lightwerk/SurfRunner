@@ -16,7 +16,7 @@ class DatabaseBackend extends \TYPO3\Flow\Log\Backend\AbstractBackend {
 
 
 	// for a database without caching tables we got about 17419 logs which kills the FE
-	const MAX_LOGS = 500;
+	const MAX_LOGS = 1000;
 
 	/**
 	 * @FLOW\Inject
@@ -80,8 +80,6 @@ class DatabaseBackend extends \TYPO3\Flow\Log\Backend\AbstractBackend {
 				->setNumber(++$this->number)
 				->setMessage('logging killed with #logs > ' . self::MAX_LOGS)
 				->setSeverity(LOG_EMERG);
-			// TODO App cannot handle LOG_EMERG = 0 = System ist unbrauchbar
-			// TODO self::MAX_LOGS?
 			$this->logRepository->add($log);
 			$this->persistenceManager->persistAll();
 		}
