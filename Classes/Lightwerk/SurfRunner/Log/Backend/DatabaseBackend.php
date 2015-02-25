@@ -14,6 +14,10 @@ use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 
 class DatabaseBackend extends \TYPO3\Flow\Log\Backend\AbstractBackend {
 
+
+	// for a database without caching tables we got about 17419 logs which kills the FE
+	const MAX_LOGS = 1000;
+
 	/**
 	 * @FLOW\Inject
 	 * @var LogRepository
@@ -60,14 +64,25 @@ class DatabaseBackend extends \TYPO3\Flow\Log\Backend\AbstractBackend {
 	 * @api
 	 */
 	public function append($message, $severity = LOG_INFO, $additionalData = NULL, $packageKey = NULL, $className = NULL, $methodName = NULL) {
-		$log = new Log();
-		$log->setDeployment($this->deployment)
-			->setDate(new \DateTime())
-			->setNumber(++$this->number)
-			->setMessage($message)
-			->setSeverity($severity);
-		$this->logRepository->add($log);
-		$this->persistenceManager->persistAll();
+		if ($this->number < self::MAX_LOGS) {
+			$log = new Log();
+			$log->setDeployment($this->deployment)
+				->setDate(new \DateTime())
+				->setNumber(++$this->number)
+				->setMessage($message)
+				->setSeverity($severity);
+			$this->logRepository->add($log);
+			$this->persistenceManager->persistAll();
+		} elseif ($this->number === self::MAX_LOGS) {
+			$log = new Log();
+			$log->setDeployment($this->deployment)
+				->setDate(new \DateTime())
+				->setNumber(++$this->number)
+				->setMessage('logging killed with #logs > ' . self::MAX_LOGS)
+				->setSeverity(LOG_EMERG);
+			$this->logRepository->add($log);
+			$this->persistenceManager->persistAll();
+		}
 	}
 
 	public function close() {}
