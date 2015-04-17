@@ -49,6 +49,53 @@ class DeploymentService {
 	protected $signalDispatcher;
 
 	/**
+	 * @param string $identifier
+	 * @param LoggerInterface $logger
+	 * @param boolean $dryRun
+	 * @return \Lightwerk\SurfRunner\Domain\Model\Deployment
+	 * @throws \Lightwerk\SurfRunner\Exception\NoAvailableDeploymentException
+	 * @throws \Lightwerk\SurfRunner\Factory\Exception
+	 * @throws \TYPO3\Surf\Exception
+	 */
+	public function deployByIdentifier($identifier, LoggerInterface $logger, $dryRun) {
+		/** @var SurfCaptainDeployment $surfCaptainDeployment */
+		$surfCaptainDeployment = $this->persistenceManager->getObjectByIdentifier($identifier, 'Lightwerk\SurfCaptain\Domain\Model\Deployment');
+		if ($surfCaptainDeployment instanceof SurfCaptainDeployment === FALSE) {
+			throw new NoAvailableDeploymentException('deployment with identifier ' . $identifier . ' not found', 1428685495);
+		}
+		if (!$dryRun) {
+			$this->setStatusBeforeDeployment($surfCaptainDeployment);
+		}
+		$logger->addBackend(
+			new DatabaseBackend(
+				array('deployment' => $surfCaptainDeployment, 'severityThreshold' => LOG_DEBUG)
+			)
+		);
+		try {
+			$deployment = $this->deploymentFactory->getDeploymentByDeploymentRecord($surfCaptainDeployment, $logger);
+		} catch (\Lightwerk\SurfRunner\Factory\Exception $e) {
+			$this->setStatusAfterDeployment($surfCaptainDeployment, Deployment::STATUS_FAILED);
+			throw new NoAvailableDeploymentException('cannot create deployment with DeploymentFactoryException ' . $e->getMessage() . ' - ' . $e->getCode(), 1428769117);
+		}
+		$deployment->initialize();
+		if (!$dryRun) {
+			$this->emitDeploymentStarted($deployment, $surfCaptainDeployment);
+			try {
+				$deployment->deploy();
+			} catch (\TYPO3\Surf\Exception\InvalidConfigurationException $e) {
+				$this->setStatusAfterDeployment($surfCaptainDeployment, Deployment::STATUS_FAILED);
+				throw new NoAvailableDeploymentException('cannot deploy with InvalidConfigurationException' . $e->getMessage() . ' - ' . $e->getCode(), 1428769119);
+			}
+			$this->setStatusAfterDeployment($surfCaptainDeployment, $deployment->getStatus());
+			$this->emitDeploymentFinished($deployment, $surfCaptainDeployment);
+		} else {
+			$deployment->simulate();
+		}
+
+		return $deployment;
+	}
+
+	/**
 	 * @param LoggerInterface $logger
 	 * @param boolean $dryRun
 	 * @return \Lightwerk\SurfRunner\Domain\Model\Deployment
@@ -59,21 +106,15 @@ class DeploymentService {
 	public function deployWaitingFromQueue(LoggerInterface $logger, $dryRun) {
 		/** @var SurfCaptainDeployment $surfCaptainDeployment */
 		$surfCaptainDeployment = $this->deploymentRepository->findOneByStatus(SurfCaptainDeployment::STATUS_WAITING);
-		if (
-			$surfCaptainDeployment instanceof SurfCaptainDeployment === FALSE ||
-			$this->deploymentRepository->countByRepositoryUrlAndStatus($surfCaptainDeployment->getRepositoryUrl(), SurfCaptainDeployment::STATUS_RUNNING) > 0
-		) {
-			throw new NoAvailableDeploymentException();
+		if ($surfCaptainDeployment instanceof SurfCaptainDeployment === FALSE) {
+			throw new NoAvailableDeploymentException('no waiting deployments', 1428685492);
+		}
+		if ($this->deploymentRepository->countByRepositoryUrlAndStatus($surfCaptainDeployment->getRepositoryUrl(), SurfCaptainDeployment::STATUS_RUNNING) > 0) {
+			throw new NoAvailableDeploymentException('deployment already running', 1428685490);
 		}
 
 		if (!$dryRun) {
 			$this->setStatusBeforeDeployment($surfCaptainDeployment);
-		}
-
-		if ($this->deploymentRepository->countByRepositoryUrlAndStatus($surfCaptainDeployment->getRepositoryUrl(), SurfCaptainDeployment::STATUS_RUNNING) > 1) {
-			// Stop if two deployments of the same repositoryUrl are running
-			$this->setStatusBackToWaiting($surfCaptainDeployment);
-			throw new NoAvailableDeploymentException();
 		}
 
 		$logger->addBackend(
@@ -82,11 +123,21 @@ class DeploymentService {
 			)
 		);
 
-		$deployment = $this->deploymentFactory->getDeploymentByDeploymentRecord($surfCaptainDeployment, $logger);
+		try {
+			$deployment = $this->deploymentFactory->getDeploymentByDeploymentRecord($surfCaptainDeployment, $logger);
+		} catch (\Lightwerk\SurfRunner\Factory\Exception $e) {
+			$this->setStatusAfterDeployment($surfCaptainDeployment, Deployment::STATUS_FAILED);
+			throw new NoAvailableDeploymentException('cannot create deployment with DeploymentFactoryException ' . $e->getMessage() . ' - ' . $e->getCode(), 1428769118);
+		}
 		$deployment->initialize();
 		if (!$dryRun) {
 			$this->emitDeploymentStarted($deployment, $surfCaptainDeployment);
-			$deployment->deploy();
+			try {
+				$deployment->deploy();
+			} catch (\TYPO3\Surf\Exception\InvalidConfigurationException $e) {
+				$this->setStatusAfterDeployment($surfCaptainDeployment, Deployment::STATUS_FAILED);
+				throw new NoAvailableDeploymentException('cannot deploy with InvalidConfigurationException' . $e->getMessage() . ' - ' . $e->getCode(), 1428769119);
+			}
 			$this->setStatusAfterDeployment($surfCaptainDeployment, $deployment->getStatus());
 			$this->emitDeploymentFinished($deployment, $surfCaptainDeployment);
 		} else {

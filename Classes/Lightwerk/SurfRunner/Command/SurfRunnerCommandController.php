@@ -30,6 +30,30 @@ class SurfRunnerCommandController extends CommandController {
 	protected $deploymentService;
 
 	/**
+	 * @param string $identifier
+	 * @param boolean $dryRun
+	 * @param boolean $disableAnsi
+	 * @return void
+	 */
+	public function deployCommand($identifier, $dryRun = FALSE, $disableAnsi = FALSE) {
+		$logger = $this->getLogger($disableAnsi);
+		try {
+			$deployment = $this->deploymentService->deployByIdentifier($identifier, $logger, $dryRun);
+			$status = $deployment->getStatus();
+		} catch (NoAvailableDeploymentException $e) {
+			$logger->log($e->getMessage(), LOG_INFO);
+			$status = 0;
+		} catch (Exception $e) {
+			$logger->log('Configuration error: ' . $e->getMessage() . ' (Code: ' . $e->getCode() . ')', LOG_ERR);
+			$status = 1;
+		} catch (\Exception $e) {
+			$logger->log('Deployment error: ' . $e->getMessage() . ' (Code: ' . $e->getCode() . ')', LOG_ERR);
+			$status = 1;
+		}
+		$this->response->setExitCode($status);
+	}
+
+	/**
 	 * Deploy one from waiting queue
 	 *
 	 * @param boolean $dryRun
@@ -42,7 +66,7 @@ class SurfRunnerCommandController extends CommandController {
 			$deployment = $this->deploymentService->deployWaitingFromQueue($logger, $dryRun);
 			$status = $deployment->getStatus();
 		} catch (NoAvailableDeploymentException $e) {
-			$logger->log('No waiting deployments', LOG_INFO);
+			$logger->log($e->getMessage(), LOG_INFO);
 			$status = 0;
 		} catch (Exception $e) {
 			$logger->log('Configuration error: ' . $e->getMessage() . ' (Code: ' . $e->getCode() . ')', LOG_ERR);
