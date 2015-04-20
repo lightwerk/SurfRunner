@@ -136,6 +136,6 @@ abstract class AbstractApplication extends Application {
 	 * @return void
 	 */
 	public function addTaskOptions($taskOptions) {
-		$this->taskOptions = array_merge_recursive($this->taskOptions, $taskOptions);
+		$this->taskOptions = array_replace_recursive($this->taskOptions, $taskOptions);
 	}
 }
