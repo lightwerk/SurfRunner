@@ -95,8 +95,8 @@ class DeployApplication extends AbstractApplication {
 		'lightwerk.surftasks:transfer:rsync' => array(
 			'options' => array(
 				'rsyncFlags' => array(
-					'exclude' => array('typo3temp/*'),
-					'include' => array('typo3temp/.gitdummy'),
+					'exclude' => array('/typo3temp/*'),
+					'include' => array('/typo3temp/.gitdummy'),
 				)
 			),
 		),
