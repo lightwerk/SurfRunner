@@ -92,6 +92,14 @@ class DeployApplication extends AbstractApplication {
 				'nodeName' => 'localhost',
 			),
 		),
+		'lightwerk.surftasks:transfer:rsync' => array(
+			'options' => array(
+				'rsyncFlags' => array(
+					'exclude' => array('typo3temp/*'),
+					'include' => array('typo3temp/.gitdummy'),
+				)
+			),
+		),
 		'lightwerk.surftasks:deploymentlog' => array(
 			'options' => array(
 				'deploymentLogTargetPath' => '..',

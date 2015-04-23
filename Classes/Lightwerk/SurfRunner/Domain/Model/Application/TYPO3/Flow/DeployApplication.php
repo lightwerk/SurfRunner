@@ -17,16 +17,6 @@ use TYPO3\Flow\Annotations as Flow;
 class DeployApplication extends AbstractApplication {
 
 	/**
-	 * 1. initialize: Initialize directories etc. (first time deploy)
-	 * 2. package: Local preparation of and packaging of application assets
-	 * 3. transfer: Transfer of application assets to the node
-	 * 4. update: Update the application assets on the node
-	 * 5. migrate: Migrate (Doctrine, custom)
-	 * 6. finalize: Prepare final release (e.g. warmup)
-	 * 7. test: Smoke test
-	 * 8. switch: Do symlink to current release
-	 * 9. cleanup: Delete temporary files or previous releases
-	 *
 	 * @var array
 	 */
 	protected $tasks = array(
@@ -34,41 +24,26 @@ class DeployApplication extends AbstractApplication {
 			'lightwerk.surftasks:transfer:assureconnection',
 		),
 		'package' => array(
-			#'typo3.surf:package:git',
-			#'typo3.surf:composer:install',
-			#'lightwerk.surftasks:git:clean',
-			#'lightwerk.surftasks:assets:gulp',
+			'typo3.surf:package:git',
+			'typo3.surf:composer:install',
+			'lightwerk.surftasks:git:clean',
+			'lightwerk.surftasks:assets:gulp',
 		),
 		'transfer' => array(
-			#'lightwerk.surftasks:git:stoponchanges',
-			#'lightwerk.surftasks:lockfile:create',
-			#'lightwerk.surftasks:transfer:rsync',
+			'lightwerk.surftasks:git:stoponchanges',
+			'lightwerk.surftasks:transfer:rsync',
 		),
 
 		'migrate' => array(
-			#'lightwerk.surftasks:clearphpcache',
 			'lightwerk.surftasks:typo3:flow:migrate',
 			'lightwerk.surftasks:typo3:flow:flushcache',
 			'lightwerk.surftasks:typo3:flow:warmupcache',
 		),
-		// 'update' => array(),
-		/*
-		'migrate' => array(
-			'lightwerk.surftasks:clearphpcache',
-			'lightwerk.surftasks:typo3:cms:clearcache',
-			'lightwerk.surftasks:typo3:cms:createuploadfolders',
-			'lightwerk.surftasks:typo3:cms:updatedatabase',
-		),
 		'finalize' => array(
-			'lightwerk.surftasks:lockfile:remove',
 			'lightwerk.surftasks:deploymentlog',
 			'lightwerk.surftasks:git:removedeploybranch',
 			'lightwerk.surftasks:git:tagnodedeployment',
 		),
-		*/
-		// 'test' => array(),
-		// 'switch' => array(),
-		// 'cleanup' => array(),
 	);
 
 	/**
@@ -84,6 +59,13 @@ class DeployApplication extends AbstractApplication {
 			'options' => array(
 				'nodeName' => 'localhost',
 				'composerCommandPath' => 'composer',
+			),
+		),
+		'lightwerk.surftasks:transfer:rsync' => array(
+			'options' => array(
+				'rsyncFlags' => array(
+					'exclude' => array('Data/*', 'Configuration/*')
+				)
 			),
 		),
 		'lightwerk.surftasks:git:clean' => array(
