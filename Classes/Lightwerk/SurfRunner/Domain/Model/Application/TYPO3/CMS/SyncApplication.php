@@ -14,7 +14,7 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @package Lightwerk\SurfRunner
  */
-class SharedApplication extends AbstractApplication {
+class SyncApplication extends AbstractApplication {
 
 	/**
 	 * 1. initialize: Initialize directories etc. (first time deploy)
