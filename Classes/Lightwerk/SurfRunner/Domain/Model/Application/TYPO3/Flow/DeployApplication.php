@@ -64,7 +64,8 @@ class DeployApplication extends AbstractApplication {
 		'lightwerk.surftasks:transfer:rsync' => array(
 			'options' => array(
 				'rsyncFlags' => array(
-					'exclude' => array('/Data/*', '/Configuration/*')
+					'include' => array('/Data/Persistence'),
+					'exclude' => array('Configuration/PackageStates.php', 'Data/*')
 				)
 			),
 		),
