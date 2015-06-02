@@ -32,6 +32,7 @@ class DeployApplication extends AbstractApplication {
 	protected $tasks = array(
 		'initialize' => array(
 			'lightwerk.surftasks:transfer:assureconnection',
+			'lightwerk.surftasks:typo3:cms:assurecachedirectoryiswriteable',
 		),
 		'package' => array(
 			'typo3.surf:package:git',
