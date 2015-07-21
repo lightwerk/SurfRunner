@@ -8,7 +8,9 @@ namespace Lightwerk\SurfRunner\Factory;
 
 use Lightwerk\SurfRunner\Domain\Model\Application\AbstractApplication;
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Surf\Domain\Model\Node;
+use Lightwerk\SurfTasks\Factory\NodeFactory;
+use TYPO3\Surf\Exception\InvalidConfigurationException;
+
 
 /**
  * Application Factory
@@ -63,7 +65,12 @@ class ApplicationFactory {
 				throw new Exception('No nodes are given in application configuration', 1408396220);
 			}
 			foreach ($configuration['nodes'] as $nodeConfiguration) {
-				$application->addNode($this->nodeFactory->getNodeByArray($nodeConfiguration));
+				try {
+					$node = $this->nodeFactory->getNodeByArray($nodeConfiguration);
+					$application->addNode($node);
+				} catch (InvalidConfigurationException $e) {
+					throw new Exception('cannot create node from configuration', 1437474964);
+				}
 			}
 
 			$applications[] = $application;
