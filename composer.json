@@ -28,7 +28,7 @@
         "source": "https://github.com/lightwerk/SurfRunner"
     },
     "require": {
-        "typo3/surf": "*",
+        "lightwerk/surftasks": "*",
         "lightwerk/surfcaptain": "*"
     },
     "autoload": {
