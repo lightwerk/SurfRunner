@@ -36,6 +36,9 @@ class DeployApplication extends AbstractApplication {
 			'typo3.surf:package:git',
 			'typo3.surf:composer:install',
 			'lightwerk.surftasks:git:clean',
+			'lightwerk.surftasks:assets:npm',
+			'lightwerk.surftasks:assets:bower',
+			'lightwerk.surftasks:assets:grunt',
 			'lightwerk.surftasks:assets:gulp',
 		),
 		'transfer' => array(
@@ -73,9 +76,28 @@ class DeployApplication extends AbstractApplication {
 				'nodeName' => 'localhost',
 			),
 		),
+		'lightwerk.surftasks:assets:npm' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
+				'useApplicationWorkspace' => TRUE
+			),
+		),
+		'lightwerk.surftasks:assets:bower' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
+				'useApplicationWorkspace' => TRUE
+			),
+		),
+		'lightwerk.surftasks:assets:grunt' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
+				'useApplicationWorkspace' => TRUE
+			),
+		),
 		'lightwerk.surftasks:assets:gulp' => array(
 			'options' => array(
 				'nodeName' => 'localhost',
+				'useApplicationWorkspace' => TRUE
 			),
 		),
 		'lightwerk.surftasks:deploymentlog' => array(
