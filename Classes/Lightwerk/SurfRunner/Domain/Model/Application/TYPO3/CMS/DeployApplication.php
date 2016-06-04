@@ -37,6 +37,7 @@ class DeployApplication extends AbstractApplication {
 		'package' => array(
 			'typo3.surf:package:git',
 			'typo3.surf:composer:install',
+			'typo3.surf:composer:dumpAutoload',
 			'lightwerk.surftasks:git:clean',
 			'lightwerk.surftasks:assets:npm',
 			'lightwerk.surftasks:assets:bower',
@@ -79,6 +80,13 @@ class DeployApplication extends AbstractApplication {
 			'options' => array(
 				'nodeName' => 'localhost',
 				'composerCommandPath' => 'composer',
+			),
+		),
+		'typo3.surf:composer:dumpAutoload' => array(
+			'options' => array(
+				'nodeName' => 'localhost',
+				'composerCommandPath' => 'composer',
+				'composerArguments' => '--optimize',
 			),
 		),
 		'lightwerk.surftasks:git:clean' => array(
