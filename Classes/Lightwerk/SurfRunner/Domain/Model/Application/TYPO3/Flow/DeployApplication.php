@@ -14,80 +14,80 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @package Lightwerk\SurfRunner
  */
-class DeployApplication extends AbstractApplication {
+class DeployApplication extends AbstractApplication
+{
+    /**
+     * @var array
+     */
+    protected $tasks = [
+        'initialize' => [
+            'lightwerk.surftasks:transfer:assureconnection',
+        ],
+        'package' => [
+            'typo3.surf:package:git',
+            'typo3.surf:composer:install',
+            'lightwerk.surftasks:git:clean',
+            'lightwerk.surftasks:assets:gulp',
+        ],
+        'transfer' => [
+            'lightwerk.surftasks:git:stoponchanges',
+            'lightwerk.surftasks:transfer:rsync',
+        ],
 
-	/**
-	 * @var array
-	 */
-	protected $tasks = array(
-		'initialize' => array(
-			'lightwerk.surftasks:transfer:assureconnection',
-		),
-		'package' => array(
-			'typo3.surf:package:git',
-			'typo3.surf:composer:install',
-			'lightwerk.surftasks:git:clean',
-			'lightwerk.surftasks:assets:gulp',
-		),
-		'transfer' => array(
-			'lightwerk.surftasks:git:stoponchanges',
-			'lightwerk.surftasks:transfer:rsync',
-		),
+        'migrate' => [
+            'lightwerk.surftasks:typo3:flow:migrate',
+            'lightwerk.surftasks:typo3:flow:flushcache',
+            'lightwerk.surftasks:typo3:flow:warmupcache',
+        ],
+        'finalize' => [
+            'lightwerk.surftasks:deploymentlog',
+            'lightwerk.surftasks:git:removedeploybranch',
+            'lightwerk.surftasks:git:tagnodedeployment',
+        ],
+    ];
 
-		'migrate' => array(
-			'lightwerk.surftasks:typo3:flow:migrate',
-			'lightwerk.surftasks:typo3:flow:flushcache',
-			'lightwerk.surftasks:typo3:flow:warmupcache',
-		),
-		'finalize' => array(
-			'lightwerk.surftasks:deploymentlog',
-			'lightwerk.surftasks:git:removedeploybranch',
-			'lightwerk.surftasks:git:tagnodedeployment',
-		),
-	);
-
-	/**
-	 * @var array
-	 */
-	protected $taskOptions = array(
-		'typo3.surf:package:git' => array(
-			'options' => array(
-				'fetchAllTags' => TRUE,
-			),
-		),
-		'typo3.surf:composer:install' => array(
-			'options' => array(
-				'nodeName' => 'localhost',
-				'composerCommandPath' => 'composer',
-			),
-		),
-		'lightwerk.surftasks:transfer:rsync' => array(
-			'options' => array(
-				'rsyncFlags' => array(
-					'include' => array('Data/Persistence'),
-					'exclude' => array('Configuration/PackageStates.php', 'Data/*')
-				)
-			),
-		),
-		'lightwerk.surftasks:git:clean' => array(
-			'options' => array(
-				'nodeName' => 'localhost',
-			),
-		),
-		'lightwerk.surftasks:git:tagnodedeployment' => array(
-			'options' => array(
-				'nodeName' => 'localhost',
-			),
-		),
-		'lightwerk.surftasks:assets:gulp' => array(
-			'options' => array(
-				'nodeName' => 'localhost',
-			),
-		),
-		'lightwerk.surftasks:deploymentlog' => array(
-			'options' => array(
-				'deploymentLogTargetPath' => '..',
-			),
-		),
-	);
+    /**
+     * @var array
+     */
+    protected $taskOptions = [
+        'typo3.surf:package:git' => [
+            'options' => [
+                'fetchAllTags' => true,
+            ],
+        ],
+        'typo3.surf:composer:install' => [
+            'options' => [
+                'nodeName' => 'localhost',
+                'composerCommandPath' => 'composer',
+            ],
+        ],
+        'lightwerk.surftasks:transfer:rsync' => [
+            'options' => [
+                'rsyncFlags' => [
+                    'include' => ['Data/Persistence'],
+                    'exclude' => ['Configuration/PackageStates.php', 'Data/*']
+                ]
+            ],
+        ],
+        'lightwerk.surftasks:git:clean' => [
+            'options' => [
+                'nodeName' => 'localhost',
+            ],
+        ],
+        'lightwerk.surftasks:git:tagnodedeployment' => [
+            'options' => [
+                'nodeName' => 'localhost',
+            ],
+        ],
+        'lightwerk.surftasks:assets:gulp' => [
+            'options' => [
+                'nodeName' => 'localhost',
+            ],
+        ],
+        'lightwerk.surftasks:deploymentlog' => [
+            'options' => [
+                'deploymentLogTargetPath' => '..',
+            ],
+        ],
+    ];
 }

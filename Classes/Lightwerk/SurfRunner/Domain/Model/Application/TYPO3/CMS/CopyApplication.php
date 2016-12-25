@@ -14,44 +14,45 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @package Lightwerk\SurfRunner
  */
-class CopyApplication extends DeployApplication {
+class CopyApplication extends DeployApplication
+{
 
-	/**
-	 * @var array
-	 */
-	protected $tasks = array(
-		'initialize' => array(
-			'lightwerk.surftasks:transfer:assureconnection',
-		),
-		'package' => array(
-			'lightwerk.surftasks:database:dump',
-			'typo3.surf:package:git',
-			'typo3.surf:composer:install',
-			'lightwerk.surftasks:git:clean',
-			'lightwerk.surftasks:assets:gulp',
-		),
-		'transfer' => array(
-			'lightwerk.surftasks:git:stoponchanges',
-			'lightwerk.surftasks:typo3:cms:syncshared',
-			'lightwerk.surftasks:database:transfer',
-			'lightwerk.surftasks:lockfile:create',
-			'lightwerk.surftasks:transfer:rsync',
-		),
-		'migrate' => array(
-			'lightwerk.surftasks:database:import',
-			'lightwerk.surftasks:clearphpcache',
-			'lightwerk.surftasks:typo3:cms:clearcache',
-			'lightwerk.surftasks:typo3:cms:createuploadfolders',
-			'lightwerk.surftasks:typo3:cms:updatedatabase',
-		),
-		'cleanup' => array(
-			'lightwerk.surftasks:database:cleanup',
-		),
-		'finalize' => array(
-			'lightwerk.surftasks:lockfile:remove',
-			'lightwerk.surftasks:deploymentlog',
-			'lightwerk.surftasks:git:removedeploybranch',
-			'lightwerk.surftasks:git:tagnodedeployment',
-		),
-	);
+    /**
+     * @var array
+     */
+    protected $tasks = [
+        'initialize' => [
+            'lightwerk.surftasks:transfer:assureconnection',
+        ],
+        'package' => [
+            'lightwerk.surftasks:database:dump',
+            'typo3.surf:package:git',
+            'typo3.surf:composer:install',
+            'lightwerk.surftasks:git:clean',
+            'lightwerk.surftasks:assets:gulp',
+        ],
+        'transfer' => [
+            'lightwerk.surftasks:git:stoponchanges',
+            'lightwerk.surftasks:typo3:cms:syncshared',
+            'lightwerk.surftasks:database:transfer',
+            'lightwerk.surftasks:lockfile:create',
+            'lightwerk.surftasks:transfer:rsync',
+        ],
+        'migrate' => [
+            'lightwerk.surftasks:database:import',
+            'lightwerk.surftasks:clearphpcache',
+            'lightwerk.surftasks:typo3:cms:clearcache',
+            'lightwerk.surftasks:typo3:cms:createuploadfolders',
+            'lightwerk.surftasks:typo3:cms:updatedatabase',
+        ],
+        'cleanup' => [
+            'lightwerk.surftasks:database:cleanup',
+        ],
+        'finalize' => [
+            'lightwerk.surftasks:lockfile:remove',
+            'lightwerk.surftasks:deploymentlog',
+            'lightwerk.surftasks:git:removedeploybranch',
+            'lightwerk.surftasks:git:tagnodedeployment',
+        ],
+    ];
 }

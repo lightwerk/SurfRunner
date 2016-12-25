@@ -11,5 +11,6 @@ namespace Lightwerk\SurfRunner\Factory;
  *
  * @package Lightwerk\SurfRunner
  */
-class Exception extends \Lightwerk\SurfRunner\Exception {
+class Exception extends \Lightwerk\SurfRunner\Exception
+{
 }

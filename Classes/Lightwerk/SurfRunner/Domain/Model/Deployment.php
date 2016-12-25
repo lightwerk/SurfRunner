@@ -16,45 +16,48 @@ use TYPO3\Surf\Domain\Model\Node;
  *
  * @package Lightwerk\SurfRunner
  */
-class Deployment extends \TYPO3\Surf\Domain\Model\Deployment {
+class Deployment extends \TYPO3\Surf\Domain\Model\Deployment
+{
+    /**
+     * @param \TYPO3\Surf\Domain\Model\Application $application
+     * @return string
+     */
+    public function getApplicationReleasePath(Application $application)
+    {
+        return $application->getReleasesPath();
+    }
 
-	/**
-	 * @param \TYPO3\Surf\Domain\Model\Application $application
-	 * @return string
-	 */
-	public function getApplicationReleasePath(Application $application) {
-		return $application->getReleasesPath();
-	}
+    /**
+     * @param Application $application
+     * @return string
+     */
+    public function getWorkspacePath(Application $application)
+    {
+        $workspacePath = FLOW_PATH_DATA . 'Surf/';
+        if ($application->hasOption('repositoryUrl')) {
+            $urlParts = GeneralUtility::getUrlPartsFromRepositoryUrl($application->getOption('repositoryUrl'));
+            $workspacePath .= preg_replace(
+                '/[^a-zA-Z0-9]/',
+                '-',
+                $urlParts['path']
+            );
+            $workspacePath .= '_' . substr(sha1($application->getOption('repositoryUrl')), 0, 5);
+        } else {
+            // Default
+            $workspacePath .= $this->getName() . '/' . $application->getName();
+        }
+        return $workspacePath;
+    }
 
-	/**
-	 * @param Application $application
-	 * @return string
-	 */
-	public function getWorkspacePath(Application $application) {
-		$workspacePath = FLOW_PATH_DATA . 'Surf/';
-		if ($application->hasOption('repositoryUrl')) {
-			$urlParts = GeneralUtility::getUrlPartsFromRepositoryUrl($application->getOption('repositoryUrl'));
-			$workspacePath .= preg_replace(
-				'/[^a-zA-Z0-9]/',
-				'-',
-				$urlParts['path']
-			);
-			$workspacePath .= '_' . substr(sha1($application->getOption('repositoryUrl')), 0, 5);
-		} else {
-			// Default
-			$workspacePath .= $this->getName() . '/' . $application->getName();
-		}
-		return $workspacePath;
-	}
-
-	/**
-	 * @return Node|NULL
-	 */
-	public function getFirstNode() {
-		$nodes = $this->getNodes();
-		foreach ($nodes as $node) {
-			return $node;
-		}
-		return NULL;
-	}
+    /**
+     * @return Node|NULL
+     */
+    public function getFirstNode()
+    {
+        $nodes = $this->getNodes();
+        foreach ($nodes as $node) {
+            return $node;
+        }
+        return null;
+    }
 }

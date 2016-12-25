@@ -12,18 +12,18 @@ use TYPO3\Flow\Annotations as Flow;
  * @package Lightwerk\SurfRunner
  * @author Achim Fritz <af@achimfritz.de>
  */
-class SyncFolderApplication extends AbstractApplication {
-
-	/**
-	 * @var array
-	 */
-	protected $tasks = array(
-		'initialize' => array(
-			'lightwerk.surftasks:transfer:assureconnection',
-		),
-		'transfer' => array(
-			'lightwerk.surftasks:typo3:cms:syncshared',
-		),
-	);
+class SyncFolderApplication extends AbstractApplication
+{
+    /**
+     * @var array
+     */
+    protected $tasks = [
+        'initialize' => [
+            'lightwerk.surftasks:transfer:assureconnection',
+        ],
+        'transfer' => [
+            'lightwerk.surftasks:typo3:cms:syncshared',
+        ],
+    ];
 
 }

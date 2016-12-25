@@ -14,31 +14,31 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @package Lightwerk\SurfRunner
  */
-class SyncApplication extends AbstractApplication {
+class SyncApplication extends AbstractApplication
+{
 
-	/**
-	 * @var array
-	 */
-	protected $tasks = array(
-		'initialize' => array(
-			'lightwerk.surftasks:transfer:assureconnection',
-		),
-		'package' => array(
-			'lightwerk.surftasks:database:dump',
-		),
-		'transfer' => array(
-			'lightwerk.surftasks:typo3:cms:syncshared',
-			'lightwerk.surftasks:database:transfer',
-		),
-		'migrate' => array(
-			'lightwerk.surftasks:database:import',
-		),
-		'cleanup' => array(
-			'lightwerk.surftasks:database:cleanup',
-		),
-		'finalize' => array(
-			'lightwerk.surftasks:deploymentlog',
-		),
-	);
-
+    /**
+     * @var array
+     */
+    protected $tasks = [
+        'initialize' => [
+            'lightwerk.surftasks:transfer:assureconnection',
+        ],
+        'package' => [
+            'lightwerk.surftasks:database:dump',
+        ],
+        'transfer' => [
+            'lightwerk.surftasks:typo3:cms:syncshared',
+            'lightwerk.surftasks:database:transfer',
+        ],
+        'migrate' => [
+            'lightwerk.surftasks:database:import',
+        ],
+        'cleanup' => [
+            'lightwerk.surftasks:database:cleanup',
+        ],
+        'finalize' => [
+            'lightwerk.surftasks:deploymentlog',
+        ],
+    ];
 }

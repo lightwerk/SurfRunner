@@ -12,78 +12,89 @@ use Lightwerk\SurfCaptain\Domain\Repository\LogRepository;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\PersistenceManagerInterface;
 
-class DatabaseBackend extends \TYPO3\Flow\Log\Backend\AbstractBackend {
+class DatabaseBackend extends \TYPO3\Flow\Log\Backend\AbstractBackend
+{
+    // for a database without caching tables we got about 17419 logs which kills the FE
+    const MAX_LOGS = 1000;
 
+    /**
+     * @FLOW\Inject
+     * @var LogRepository
+     */
+    protected $logRepository;
 
-	// for a database without caching tables we got about 17419 logs which kills the FE
-	const MAX_LOGS = 1000;
+    /**
+     * @FLOW\Inject
+     * @var PersistenceManagerInterface
+     */
+    protected $persistenceManager;
 
-	/**
-	 * @FLOW\Inject
-	 * @var LogRepository
-	 */
-	protected $logRepository;
+    /**
+     * @var Deployment
+     */
+    protected $deployment;
 
-	/**
-	 * @FLOW\Inject
-	 * @var PersistenceManagerInterface
-	 */
-	protected $persistenceManager;
+    /**
+     * @var integer
+     */
+    protected $number = 0;
 
-	/**
-	 * @var Deployment
-	 */
-	protected $deployment;
+    /**
+     * @param Deployment $deployment
+     * @return DatabaseBackend
+     */
+    public function setDeployment(Deployment $deployment)
+    {
+        $this->deployment = $deployment;
+        return $this;
+    }
 
-	/**
-	 * @var integer
-	 */
-	protected $number = 0;
+    public function open()
+    {
+    }
 
-	/**
-	 * @param Deployment $deployment
-	 * @return DatabaseBackend
-	 */
-	public function setDeployment(Deployment $deployment) {
-		$this->deployment = $deployment;
-		return $this;
-	}
+    /**
+     * Appends the given message along with the additional information into the log.
+     *
+     * @param string $message The message to log
+     * @param integer $severity One of the LOG_* constants
+     * @param mixed $additionalData A variable containing more information about the event to be logged
+     * @param string $packageKey Key of the package triggering the log (determined automatically if not specified)
+     * @param string $className Name of the class triggering the log (determined automatically if not specified)
+     * @param string $methodName Name of the method triggering the log (determined automatically if not specified)
+     * @return void
+     * @api
+     */
+    public function append(
+        $message,
+        $severity = LOG_INFO,
+        $additionalData = null,
+        $packageKey = null,
+        $className = null,
+        $methodName = null
+    ) {
+        if ($this->number < self::MAX_LOGS) {
+            $log = new Log();
+            $log->setDeployment($this->deployment)
+                ->setDate(new \DateTime())
+                ->setNumber(++$this->number)
+                ->setMessage($message)
+                ->setSeverity($severity);
+            $this->logRepository->add($log);
+            $this->persistenceManager->persistAll();
+        } elseif ($this->number === self::MAX_LOGS) {
+            $log = new Log();
+            $log->setDeployment($this->deployment)
+                ->setDate(new \DateTime())
+                ->setNumber(++$this->number)
+                ->setMessage('logging killed with #logs > ' . self::MAX_LOGS)
+                ->setSeverity(LOG_EMERG);
+            $this->logRepository->add($log);
+            $this->persistenceManager->persistAll();
+        }
+    }
 
-	public function open() {}
-
-	/**
-	 * Appends the given message along with the additional information into the log.
-	 *
-	 * @param string $message The message to log
-	 * @param integer $severity One of the LOG_* constants
-	 * @param mixed $additionalData A variable containing more information about the event to be logged
-	 * @param string $packageKey Key of the package triggering the log (determined automatically if not specified)
-	 * @param string $className Name of the class triggering the log (determined automatically if not specified)
-	 * @param string $methodName Name of the method triggering the log (determined automatically if not specified)
-	 * @return void
-	 * @api
-	 */
-	public function append($message, $severity = LOG_INFO, $additionalData = NULL, $packageKey = NULL, $className = NULL, $methodName = NULL) {
-		if ($this->number < self::MAX_LOGS) {
-			$log = new Log();
-			$log->setDeployment($this->deployment)
-				->setDate(new \DateTime())
-				->setNumber(++$this->number)
-				->setMessage($message)
-				->setSeverity($severity);
-			$this->logRepository->add($log);
-			$this->persistenceManager->persistAll();
-		} elseif ($this->number === self::MAX_LOGS) {
-			$log = new Log();
-			$log->setDeployment($this->deployment)
-				->setDate(new \DateTime())
-				->setNumber(++$this->number)
-				->setMessage('logging killed with #logs > ' . self::MAX_LOGS)
-				->setSeverity(LOG_EMERG);
-			$this->logRepository->add($log);
-			$this->persistenceManager->persistAll();
-		}
-	}
-
-	public function close() {}
+    public function close()
+    {
+    }
 }
