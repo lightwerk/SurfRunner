@@ -32,8 +32,8 @@
         "lightwerk/surfcaptain": "*"
     },
     "autoload": {
-        "psr-0": {
-            "Lightwerk\\SurfRunner": "Classes"
+        "psr-4": {
+            "Lightwerk\\SurfRunner": "Classes/Lightwerk/SurfRunner/"
         }
     }
 }
