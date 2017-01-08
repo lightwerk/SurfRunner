@@ -28,7 +28,7 @@
     "require": {
         "lightwerk/surftasks": "*",
         "lightwerk/surfcaptain": "*",
-        "typo3/flow": "^3.0",
+        "typo3/flow": "^3.3",
         "typo3/surf": "*"
     },
     "support": {
