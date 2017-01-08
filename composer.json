@@ -27,10 +27,6 @@
         "issues": "https://github.com/lightwerk/SurfRunner/issues",
         "source": "https://github.com/lightwerk/SurfRunner"
     },
-    "require": {
-        "lightwerk/surftasks": "*",
-        "lightwerk/surfcaptain": "*"
-    },
     "autoload": {
         "psr-4": {
             "Lightwerk\\SurfRunner\\": "Classes/Lightwerk/SurfRunner/"
