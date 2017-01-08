@@ -11,5 +11,6 @@ namespace Lightwerk\SurfRunner\Exception;
  *
  * @package Lightwerk\SurfRunner
  */
-class NoAvailableDeploymentException extends \Lightwerk\SurfRunner\Exception {
+class NoAvailableDeploymentException extends \Lightwerk\SurfRunner\Exception
+{
 }

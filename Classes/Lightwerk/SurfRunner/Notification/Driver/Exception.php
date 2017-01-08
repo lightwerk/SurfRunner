@@ -11,5 +11,6 @@ namespace Lightwerk\SurfRunner\Notification\Driver;
  *
  * @package Lightwerk\SurfRunner
  */
-class Exception extends \Lightwerk\SurfRunner\Notification\Exception {
+class Exception extends \Lightwerk\SurfRunner\Notification\Exception
+{
 }
