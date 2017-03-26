@@ -29,7 +29,7 @@
         "lightwerk/surftasks": "*",
         "lightwerk/surfcaptain": "*",
         "neos/flow": "^3.3",
-        "neos/surf": "^0.9"
+        "typo3/surf": "^0.9"
     },
     "support": {
         "issues": "https://github.com/lightwerk/SurfRunner/issues",
