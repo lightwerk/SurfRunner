@@ -28,8 +28,8 @@
     "require": {
         "lightwerk/surftasks": "*",
         "lightwerk/surfcaptain": "*",
-        "typo3/flow": "^3.3",
-        "typo3/surf": "*"
+        "neos/flow": "^3.3",
+        "typo3/surf": "^0.9"
     },
     "support": {
         "issues": "https://github.com/lightwerk/SurfRunner/issues",
